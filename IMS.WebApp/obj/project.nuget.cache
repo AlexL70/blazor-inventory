@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "JD1STagIWe0=",
+  "success": true,
+  "projectFilePath": "/Volumes/transcend/src/learning/dotnet/blazor/IMS/IMS.WebApp/IMS.WebApp.csproj",
+  "expectedPackageFiles": [
+    "/Users/alexl70/.nuget/packages/microsoft.aspnetcore.app.internal.assets/10.0.0/microsoft.aspnetcore.app.internal.assets.10.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
