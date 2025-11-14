@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IMS.UseCases\IMS.UseCases.csproj" />
+    <ProjectReference Include="..\IMS.Plugins\IMS.Plugins.InMemory\IMS.Plugins.InMemory.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
