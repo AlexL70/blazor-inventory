@@ -1,7 +1,8 @@
 using IMS.Plugins.InMemory;
+using IMS.UseCases.Inventories;
+using IMS.UseCases.Inventories.Interfaces;
 using IMS.UseCases.PluginInterfaces;
 using IMS.WebApp.Components;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddSingleton<IInventoryRepository, InventoryRepository>();
+RegisterServices(builder.Services);
 
 var app = builder.Build();
 
@@ -30,3 +31,9 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+static void RegisterServices(IServiceCollection services)
+{
+    services.AddSingleton<IInventoryRepository, InventoryRepository>();
+    services.AddTransient<IViewInventoriesByNameUserCase, ViewInventoriesByNameUserCase>();
+}

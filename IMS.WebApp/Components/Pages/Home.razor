@@ -1,7 +1,48 @@
 ﻿@page "/"
+@inject IViewInventoriesByNameUserCase view;
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Test Page</PageTitle>
+<br/>
+<br/>
 
-<h1>Hello, world!</h1>
+@if (inventories is null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (inventories.Count == 0)
+{
+    <p><em>No inventories found.</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Inventory inventory in inventories)
+            {
+                <tr>
+                    <td>@inventory.Name</td>
+                    <td>@inventory.Quantity</td>
+                    <td>@inventory.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
-Welcome to your new app.
+@code {
+    private List<Inventory>? inventories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        inventories = (await view.ExecuteAsync()).ToList();
+        return;
+    }
+}
