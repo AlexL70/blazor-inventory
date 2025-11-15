@@ -1,5 +1,8 @@
 @page "/inventories"
-@using IMS.WebApp.Components.Controls
+@inject NavigationManager NavigationManager
 
 <h3>Inventory List</h3>
 <InventoryListComponent></InventoryListComponent>
+<br/>
+<a href="/inventories/add" class="btn btn-primary">Add Inventory</a>
+<br/>
