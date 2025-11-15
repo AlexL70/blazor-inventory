@@ -27,6 +27,12 @@ namespace IMS.Plugins.InMemory
             _inventories.Add(new Inventory { Id = 15, Name = "Tire (Front)", Quantity = 30, Price = 22.00m });
         }
 
+        public Task AddInventoryAsync(Inventory inventory)
+        {
+            _inventories.Add(inventory);
+            return Task.CompletedTask;
+        }
+
         public Task<IEnumerable<Inventory>> GetInventoriesByNameAsync(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
