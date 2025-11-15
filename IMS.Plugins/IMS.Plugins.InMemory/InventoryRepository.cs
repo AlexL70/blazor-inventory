@@ -29,6 +29,19 @@ namespace IMS.Plugins.InMemory
 
         public Task AddInventoryAsync(Inventory inventory)
         {
+            if (inventory.Id != 0 && _inventories.Any(i => i.Id == inventory.Id))
+            {
+                throw new ArgumentException($"An inventory item with the same Id={inventory.Id} already exists.");
+            }
+            inventory.Id = inventory.Id == 0
+                ? (_inventories.Count > 0
+                    ? _inventories.Max(i => i.Id) + 1
+                    : 1)
+                : inventory.Id;
+            if (_inventories.Any(i => i.Name.Equals(inventory.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new ArgumentException($"An inventory item with the same Name='{inventory.Name}' already exists.");
+            }
             _inventories.Add(inventory);
             return Task.CompletedTask;
         }

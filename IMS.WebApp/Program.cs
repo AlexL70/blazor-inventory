@@ -36,4 +36,5 @@ static void RegisterServices(IServiceCollection services)
 {
     services.AddSingleton<IInventoryRepository, InventoryRepository>();
     services.AddTransient<IViewInventoriesByNameUserCase, ViewInventoriesByNameUserCase>();
+    services.AddTransient<IAddInventoryUseCase, AddInventoryUseCase>();
 }
