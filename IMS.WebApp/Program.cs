@@ -38,4 +38,5 @@ static void RegisterServices(IServiceCollection services)
     services.AddTransient<IViewInventoriesByNameUserCase, ViewInventoriesByNameUserCase>();
     services.AddTransient<IAddInventoryUseCase, AddInventoryUseCase>();
     services.AddTransient<IEditInventoryUseCase, EditInventoryUseCase>();
+    services.AddTransient<IGetInventoryByIdUseCase, GetInventoryByIdUseCase>();
 }

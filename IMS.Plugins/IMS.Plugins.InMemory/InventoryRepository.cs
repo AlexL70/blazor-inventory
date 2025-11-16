@@ -56,6 +56,16 @@ namespace IMS.Plugins.InMemory
             return Task.FromResult(result);
         }
 
+        public Task<Inventory> GetInventoryByIdAsync(int inventoryId)
+        {
+            var inventory = _inventories.FirstOrDefault(i => i.Id == inventoryId);
+            if (inventory == null)
+            {
+                throw new ArgumentException($"Inventory with Id={inventoryId} not found.");
+            }
+            return Task.FromResult(inventory);
+        }
+
         public Task UpdateInventoryAsync(Inventory inventory)
         {
             var invToUpdate = _inventories.FirstOrDefault(i => i.Id == inventory.Id);

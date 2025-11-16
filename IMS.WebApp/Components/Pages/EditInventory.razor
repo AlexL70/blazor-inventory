@@ -1,9 +1,25 @@
 @page "/inventories/edit/{InventoryId:int}"
 
-<h3>Edit Inventory</h3>
-<p>Editing inventory item with ID: @InventoryId</p>
+@inject IGetInventoryByIdUseCase getUseCase
 
+<h3>Edit Inventory</h3>
+@if (inventory is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p>Name: @inventory.Name</p>
+    <p>Quantity: @inventory.Quantity</p>
+    <p>Price: @inventory.Price.ToString("c")</p>
+}
 @code {
     [Parameter]
     public int InventoryId { get; set; }
+
+    private Inventory? inventory;
+    protected override async Task OnInitializedAsync()
+    {
+        inventory = await getUseCase.ExecuteAsync(InventoryId);
+    }
 }
