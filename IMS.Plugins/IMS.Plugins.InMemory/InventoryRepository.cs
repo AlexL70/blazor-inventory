@@ -1,4 +1,5 @@
 using IMS.CoreBusiness;
+using IMS.CoreBusiness.Exceptions;
 using IMS.UseCases.PluginInterfaces;
 
 namespace IMS.Plugins.InMemory
@@ -61,7 +62,7 @@ namespace IMS.Plugins.InMemory
             var inventory = _inventories.FirstOrDefault(i => i.Id == inventoryId);
             if (inventory == null)
             {
-                throw new ArgumentException($"Inventory with Id={inventoryId} not found.");
+                throw new NotFoundException(typeof(Inventory), inventoryId.ToString());
             }
             return Task.FromResult(inventory);
         }
@@ -71,7 +72,7 @@ namespace IMS.Plugins.InMemory
             var invToUpdate = _inventories.FirstOrDefault(i => i.Id == inventory.Id);
             if (invToUpdate == null)
             {
-                throw new ArgumentException($"Inventory with Id={inventory.Id} not found.");
+                throw new NotFoundException(typeof(Inventory), inventory.Id.ToString());
             }
             if (_inventories.Any(i => i.Id != inventory.Id && i.Name.Equals(inventory.Name, StringComparison.OrdinalIgnoreCase)))
             {
