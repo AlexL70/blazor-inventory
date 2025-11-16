@@ -55,5 +55,10 @@ namespace IMS.Plugins.InMemory
             var result = _inventories.Where(i => i.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
             return Task.FromResult(result);
         }
+
+        public Task UpdateInventoryAsync(Inventory inventory)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
