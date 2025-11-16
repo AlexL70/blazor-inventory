@@ -47,6 +47,12 @@ namespace IMS.Plugins.InMemory
             return Task.CompletedTask;
         }
 
+        public async Task DeleteInventoryAsync(int inventoryId)
+        {
+            var inventory = await GetInventoryByIdAsync(inventoryId);
+            _inventories.Remove(inventory);
+        }
+
         public Task<IEnumerable<Inventory>> GetInventoriesByNameAsync(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
