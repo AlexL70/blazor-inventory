@@ -3,7 +3,7 @@
     <td>@Inventory.Quantity</td>
     <td>@Inventory.Price.ToString("c")</td>
     <td>
-        <button type="button" class="btn btn-light">Edit</button>
+        <a class="btn btn-light" href=@($"/inventories/edit/{Inventory.Id}")>Edit</a>
     </td>
 </tr>
 
