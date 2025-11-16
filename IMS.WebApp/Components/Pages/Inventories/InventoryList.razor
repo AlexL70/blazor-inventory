@@ -2,7 +2,18 @@
 @inject NavigationManager NavigationManager
 
 <h3>Inventory List</h3>
-<InventoryListComponent SearchFilter=""></InventoryListComponent>
+<EditForm Model="@inventorySearchFilter" FormName="formSearchInventories">
+    <div class="input-group">
+        <InputText class="form-control" @bind-Value="inventorySearchFilter" placeholder="Start typing inventory's name here to search..." />
+        <button class="btn btn-success" type="submit">Search</button>
+    </div>
+</EditForm>
+<InventoryListComponent SearchFilter="@inventorySearchFilter"></InventoryListComponent>
 <br/>
 <a href="/inventories/add" class="btn btn-primary">Add Inventory</a>
 <br/>
+
+@code {
+    [SupplyParameterFromForm]
+    private string? inventorySearchFilter { get; set; } = string.Empty;
+}
