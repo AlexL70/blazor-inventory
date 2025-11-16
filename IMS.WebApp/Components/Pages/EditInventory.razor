@@ -1,6 +1,8 @@
 @page "/inventories/edit/{InventoryId:int}"
 
 @inject IGetInventoryByIdUseCase getUseCase
+@inject IEditInventoryUseCase editUseCase;
+@inject NavigationManager navManager
 
 <h3>Edit Inventory</h3>
 @if (inventory is null)
@@ -9,17 +11,47 @@
 }
 else
 {
-    <p>Name: @inventory.Name</p>
-    <p>Quantity: @inventory.Quantity</p>
-    <p>Price: @inventory.Price.ToString("c")</p>
+    <EditForm Model="inventory" FormName="formInventory" OnValidSubmit="Update">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <InputNumber @bind-Value="inventory.Id" hidden />
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <InputText id="name" class="form-control" @bind-Value="inventory.Name" />
+            <ValidationMessage For="@(() => inventory.Name)" />
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity:</label>
+            <InputNumber id="quantity" class="form-control" @bind-Value="inventory.Quantity" />
+            <ValidationMessage For="@(() => inventory.Quantity)" />
+        </div>
+        <div class="form-group">
+            <label for="price">Price:</label>
+            <InputNumber id="price" class="form-control" @bind-Value="inventory.Price" />
+            <ValidationMessage For="@(() => inventory.Price)" />
+        </div>
+        <div class="form-group">
+            <br/>
+            <button type="submit" class="btn btn-primary">Update</button>
+            &nbsp;
+            <a href="/inventories" class="btn btn-secondary">Cancel</a>
+        </div>
+    </EditForm>
 }
 @code {
     [Parameter]
     public int InventoryId { get; set; }
 
-    private Inventory? inventory;
-    protected override async Task OnInitializedAsync()
+    [SupplyParameterFromForm]
+    private Inventory? inventory { get; set; } = null;
+
+    protected override async Task OnParametersSetAsync()
     {
-        inventory = await getUseCase.ExecuteAsync(InventoryId);
+        inventory ??= await getUseCase.ExecuteAsync(InventoryId);
+    }
+    private async Task Update()
+    {
+        await editUseCase.ExecuteAsync(inventory!);
+        navManager.NavigateTo("/inventories");
     }
 }
