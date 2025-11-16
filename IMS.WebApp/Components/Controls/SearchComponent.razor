@@ -1,0 +1,24 @@
+<EditForm Model="@searchFilter" FormName="formSearch" OnValidSubmit="Search">
+    <div class="input-group">
+        <InputText class="form-control" @bind-Value="searchFilter" placeholder="Start typing here to search..." />
+        <button class="btn btn-success" type="submit">Search</button>
+    </div>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private string? searchFilter { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        searchFilter ??= string.Empty;
+    }
+
+    [Parameter]
+    public EventCallback<string?> OnSearch { get; set; }
+
+    private void Search()
+    {
+        OnSearch.InvokeAsync(searchFilter);
+    }
+}
