@@ -1,4 +1,4 @@
-<EditForm Model="@searchFilter" FormName="formSearch" OnValidSubmit="Search">
+<EditForm Enhance="true" Model="@searchFilter" FormName="formSearch" OnValidSubmit="Search">
     <div class="input-group">
         <InputText class="form-control" @bind-Value="searchFilter" placeholder="Start typing here to search..." />
         <button class="btn btn-success" type="submit">Search</button>
