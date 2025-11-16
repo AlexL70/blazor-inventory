@@ -31,10 +31,13 @@ else
 @code {
     private List<Inventory>? inventories;
 
+    [Parameter]
+    public string? SearchFilter { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        inventories = (await view.ExecuteAsync()).ToList();
+        inventories = (await view.ExecuteAsync(SearchFilter ?? string.Empty)).ToList();
         return;
     }
 }
