@@ -1,7 +1,8 @@
 @inject IViewInventoriesByNameUserCase view;
 
 <div class="input-group">
-    <input class="form-control" @bind-value="this.searchFilter" placeholder="Start typing here to search..." />
+    <input class="form-control" @bind-value="this.searchFilter" @bind-value:event="oninput"
+        placeholder="Start typing here to search..." />
     <button class="btn btn-success" type="button" @onclick="async () => await HandleSearch()">Search</button>
 </div>
 @if (inventories is not null && inventories.Count > 0)
@@ -17,11 +18,27 @@
 }
 
 @code {
-    private string searchFilter = string.Empty;
+    private string _searchFilter = string.Empty;
+    private string searchFilter
+    {
+        get => _searchFilter;
+        set
+        {
+            _searchFilter = value;
+            // after search is initialized, it is OK to leave the method
+            // a the moment inventories change, the data will be re-rendered
+            // because of StateHasChanged call in HandleSearch
+#pragma warning disable CS4014
+            HandleSearch();
+#pragma warning restore CS4014
+        }
+    }
     private IList<Inventory> inventories = new List<Inventory>();
 
     private async Task HandleSearch()
     {
+        await Task.Delay(500); // simulate long running DB call
         inventories = (await view.ExecuteAsync(this.searchFilter)).ToList();
+        StateHasChanged();
     }
 }
