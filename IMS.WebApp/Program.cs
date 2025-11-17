@@ -46,4 +46,5 @@ static void RegisterServices(IServiceCollection services)
     // Product Management Services
     services.AddSingleton<IProductRepository, ProductRepository>();
     services.AddTransient<IViewProductsByNameUseCase, ViewProductsByNameUseCase>();
+    services.AddTransient<IDeleteProductUseCase, DeleteProductUseCase>();
 }
