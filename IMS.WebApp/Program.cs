@@ -1,6 +1,8 @@
 using IMS.Plugins.InMemory;
 using IMS.UseCases.Inventories;
 using IMS.UseCases.Inventories.Interfaces;
+using IMS.UseCases.Products;
+using IMS.UseCases.Products.Interfaces;
 using IMS.UseCases.PluginInterfaces;
 using IMS.WebApp.Components;
 
@@ -34,10 +36,14 @@ app.Run();
 
 static void RegisterServices(IServiceCollection services)
 {
+    // Inventory Management Services
     services.AddSingleton<IInventoryRepository, InventoryRepository>();
     services.AddTransient<IViewInventoriesByNameUserCase, ViewInventoriesByNameUserCase>();
     services.AddTransient<IAddInventoryUseCase, AddInventoryUseCase>();
     services.AddTransient<IEditInventoryUseCase, EditInventoryUseCase>();
     services.AddTransient<IGetInventoryByIdUseCase, GetInventoryByIdUseCase>();
     services.AddTransient<IDeleteInventoryUseCase, DeleteInventoryUseCase>();
+    // Product Management Services
+    services.AddSingleton<IProductRepository, ProductRepository>();
+    services.AddTransient<IViewProductsByNameUseCase, ViewProductsByNameUseCase>();
 }
