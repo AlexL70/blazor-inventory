@@ -1,0 +1,27 @@
+@inject IViewInventoriesByNameUserCase view;
+
+<div class="input-group">
+    <input class="form-control" @bind-value="this.searchFilter" placeholder="Start typing here to search..." />
+    <button class="btn btn-success" type="button" @onclick="async () => await HandleSearch()">Search</button>
+</div>
+@if (inventories is not null && inventories.Count > 0)
+{
+    <div style="overflow-y:auto;max-height:300px;border:1px solid silver; padding-top: 5px; margin-top:10px;">
+        <ul style="list-style-type:none; cursor:pointer;">
+            @foreach (Inventory inventory in inventories)
+            {
+                <li @key="inventory.Id">@inventory.Name - Quantity: @inventory.Quantity</li>
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    private string searchFilter = string.Empty;
+    private IList<Inventory> inventories = new List<Inventory>();
+
+    private async Task HandleSearch()
+    {
+        inventories = (await view.ExecuteAsync(this.searchFilter)).ToList();
+    }
+}
