@@ -14,7 +14,7 @@ namespace IMS.UseCases.Products
             this.repository = repository;
         }
 
-        public async Task<IEnumerable<Product>> Execute(string name = "")
+        public async Task<IEnumerable<Product>> ExecuteAsync(string name = "")
         {
             return await repository.GetProductsByNameAsync(name);
         }

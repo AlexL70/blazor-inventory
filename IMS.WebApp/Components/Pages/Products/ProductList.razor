@@ -1,0 +1,17 @@
+@page "/products"
+@inject NavigationManager NavigationManager
+
+<h3>Product List</h3>
+<SearchComponent OnSearch="HandleSearch"></SearchComponent>
+<ProductListComponent SearchFilter="@productSearchFilter"></ProductListComponent>
+<br />
+<a href="/products/add" class="btn btn-primary">Add Product</a>
+<br />
+
+@code {
+    private string? productSearchFilter;
+    private void HandleSearch(string? searchFilter)
+    {
+        productSearchFilter = searchFilter;
+    }
+}

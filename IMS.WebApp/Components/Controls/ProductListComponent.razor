@@ -1,0 +1,43 @@
+@inject IViewProductsByNameUseCase view;
+
+@if (products is null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (products.Count == 0)
+{
+    <p><em>No products found.</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Product product in products)
+            {
+                <ProductListItemComponent Product="product"></ProductListItemComponent>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Product>? products;
+
+    [Parameter]
+    public string? SearchFilter { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        products = (await view.ExecuteAsync(SearchFilter ?? string.Empty)).ToList();
+        return;
+    }
+}
