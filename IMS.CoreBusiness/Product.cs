@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using IMS.CoreBusiness.Validations;
 
 namespace IMS.CoreBusiness
 {
@@ -13,6 +14,7 @@ namespace IMS.CoreBusiness
         [Range(0, double.MaxValue, ErrorMessage = "Price must be greater than or equal to 0")]
         public decimal Price { get; set; }
 
+        [ProductPriceVsInventoriesCostValidation]
         public IList<ProductInventory> Inventories { get; set; } = [];
 
         public void AddInventory(Inventory inventory)

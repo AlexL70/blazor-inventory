@@ -6,6 +6,7 @@
             <tr>
                 <th>Name</th>
                 <th>Quantity</th>
+                <th>Price</th>
                 <th></th>
             </tr>
         </thead>
@@ -15,6 +16,7 @@
                 <tr>
                     <td>@inventory.Inventory?.Name</td>
                     <td><input type="number" min="0" @bind-value="inventory.Quantity" /></td>
+                    <td>@inventory.Inventory?.Price</td>
                     <td>
                         <button type="button" class="btn btn-link text-danger"
                             @onclick="() => RemoveInventory(inventory)">Remove</button>
