@@ -11,13 +11,16 @@
         <ul>
             @foreach (Inventory inventory in inventories)
             {
-                <li @key="inventory.Id">@inventory.Name - Quantity: @inventory.Quantity</li>
+                <li @key="inventory.Id" @onclick="async () => await HandleSelectInventory(inventory)">
+                    @inventory.Name - Quantity: @inventory.Quantity</li>
             }
         </ul>
     </div>
 }
 
 @code {
+    [Parameter]
+    public EventCallback<Inventory> OnInventorySelected { get; set; }
     private string _searchFilter = string.Empty;
     private string searchFilter
     {
@@ -40,5 +43,13 @@
         await Task.Delay(500); // simulate long running DB call
         inventories = (await view.ExecuteAsync(this.searchFilter)).ToList();
         StateHasChanged();
+    }
+    private async Task HandleSelectInventory(Inventory inventory)
+    {
+        if (OnInventorySelected.HasDelegate)
+        {
+            await OnInventorySelected.InvokeAsync(inventory);
+            inventories.Clear();
+        }
     }
 }

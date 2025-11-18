@@ -1,0 +1,41 @@
+<SearchProductInventoriesComponent OnInventorySelected="HandleInventorySelected"></SearchProductInventoriesComponent>
+@if (Product?.Inventories?.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var inventory in Product!.Inventories)
+            {
+                <tr>
+                    <td>@inventory.Inventory?.Name</td>
+                    <td><input type="number" min="0" @bind-value="inventory.Quantity" /></td>
+                    <td>
+                        <button type="button" class="btn btn-link text-danger"
+                            @onclick="() => RemoveInventory(inventory)">Remove</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public Product? Product { get; set; }
+
+    public void RemoveInventory(ProductInventory inventory)
+    {
+        Product!.RemoveInventory(inventory);
+    }
+    private Task HandleInventorySelected(Inventory inventory)
+    {
+        Product?.AddInventory(inventory);
+        return Task.CompletedTask;
+    }
+}
