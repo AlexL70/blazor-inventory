@@ -70,12 +70,34 @@ namespace IMS.Plugins.InMemory
 
         public Task<Product> GetProductByIdAsync(int ProductId)
         {
-            var Product = products.FirstOrDefault(i => i.Id == ProductId);
-            if (Product == null)
+            var product = products.FirstOrDefault(i => i.Id == ProductId);
+            if (product == null)
             {
                 throw new NotFoundException(typeof(Product), ProductId.ToString());
             }
-            return Task.FromResult(Product);
+            return Task.FromResult(new Product
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Quantity = product.Quantity,
+                Price = product.Price,
+                Inventories = [.. product.Inventories.Select(pi => new ProductInventory
+                {
+                    ProductId = pi.ProductId,
+                    InventoryId = pi.InventoryId,
+                    Quantity = pi.Quantity,
+                    Product = product,
+                    Inventory = pi.Inventory == null
+                        ? new Inventory() { Id = pi.InventoryId }
+                        : new Inventory
+                        {
+                            Id = pi.InventoryId,
+                            Name = pi.Inventory.Name,
+                            Quantity = pi.Inventory.Quantity,
+                            Price = pi.Inventory.Price
+                        }
+                })]
+            });
         }
 
         public Task UpdateProductAsync(Product Product)

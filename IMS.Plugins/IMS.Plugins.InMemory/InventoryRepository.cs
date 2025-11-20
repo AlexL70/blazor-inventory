@@ -70,7 +70,13 @@ namespace IMS.Plugins.InMemory
             {
                 throw new NotFoundException(typeof(Inventory), inventoryId.ToString());
             }
-            return Task.FromResult(inventory);
+            return Task.FromResult(new Inventory
+            {
+                Id = inventory.Id,
+                Name = inventory.Name,
+                Quantity = inventory.Quantity,
+                Price = inventory.Price
+            });
         }
 
         public Task UpdateInventoryAsync(Inventory inventory)
