@@ -1,31 +1,36 @@
-<SearchProductInventoriesComponent OnInventorySelected="HandleInventorySelected"></SearchProductInventoriesComponent>
-@if (Product?.Inventories?.Count > 0)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var inventory in Product!.Inventories)
-            {
-                <tr>
-                    <td>@inventory.Inventory?.Name</td>
-                    <td><input type="number" min="0" @bind-value="inventory.Quantity" /></td>
-                    <td>@inventory.Inventory?.Price</td>
-                    <td>
-                        <button type="button" class="btn btn-link text-danger"
-                            @onclick="() => RemoveInventory(inventory)">Remove</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<div class="card">
+    <div class="card-body">
+        <SearchProductInventoriesComponent OnInventorySelected="HandleInventorySelected">
+        </SearchProductInventoriesComponent>
+        @if (Product?.Inventories?.Count > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var inventory in Product!.Inventories)
+                    {
+                        <tr>
+                            <td>@inventory.Inventory?.Name</td>
+                            <td><input type="number" min="0" @bind-value="inventory.Quantity" /></td>
+                            <td>@inventory.Inventory?.Price</td>
+                            <td>
+                                <button type="button" class="btn btn-link text-danger"
+                                    @onclick="() => RemoveInventory(inventory)">Remove</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
 
 @code {
     [Parameter]
