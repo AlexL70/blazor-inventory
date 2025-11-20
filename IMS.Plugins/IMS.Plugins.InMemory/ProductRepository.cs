@@ -114,6 +114,7 @@ namespace IMS.Plugins.InMemory
             invToUpdate.Name = Product.Name;
             invToUpdate.Quantity = Product.Quantity;
             invToUpdate.Price = Product.Price;
+            invToUpdate.Inventories = Product.Inventories;
             return Task.CompletedTask;
         }
     }

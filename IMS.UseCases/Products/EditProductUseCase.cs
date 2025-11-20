@@ -5,14 +5,9 @@ using IMS.UseCases.Products.Interfaces;
 namespace IMS.UseCases.Products
 {
 
-    public class EditProductUseCase : IEditProductUseCase
+    public class EditProductUseCase(IProductRepository repository) : IEditProductUseCase
     {
-        private readonly IProductRepository repository;
-
-        public EditProductUseCase(IProductRepository repository)
-        {
-            this.repository = repository;
-        }
+        private readonly IProductRepository repository = repository;
 
         public async Task ExecuteAsync(Product product)
         {
