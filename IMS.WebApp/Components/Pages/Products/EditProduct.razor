@@ -1,4 +1,5 @@
 @page "/products/edit/{Id:int}"
+@using IMS.CoreBusiness.Exceptions
 @rendermode InteractiveServer
 @inject IGetProductByIdUseCase getByIdUseCase;
 @inject IEditProductUseCase editUseCase;
@@ -46,8 +47,16 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        product = await getByIdUseCase.ExecuteAsync(Id);
+        try
+        {
+            product = await getByIdUseCase.ExecuteAsync(Id);
+        }
+        catch (NotFoundException)
+        {
+            navManager.NotFound();
+        }
     }
+
     private async Task Update()
     {
         await editUseCase.ExecuteAsync(product!);
