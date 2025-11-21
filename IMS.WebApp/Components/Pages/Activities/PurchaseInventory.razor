@@ -1,0 +1,18 @@
+@page "/purchase"
+@using System.Threading.Tasks
+@using static IMS.WebApp.Components.Controls.Common.AutoCompleteComponent
+@rendermode InteractiveServer
+@inject IViewInventoriesByNameUserCase viewUseCase;
+<h3>Purchase Inventory</h3>
+<br />
+<AutoCompleteComponent Label="Search Inventory" Placeholder="Start typing to search inventory..."
+    SearchFunction="SearchInventory">
+</AutoCompleteComponent>
+@code {
+    private List<ItemViewModel> SearchInventory(string query)
+    {
+        return viewUseCase.ExecuteAsync(query).GetAwaiter().GetResult()
+        .Select(inv => new ItemViewModel { Id = inv.Id, Name = inv.Name })
+        .ToList();
+    }
+}
