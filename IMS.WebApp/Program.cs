@@ -5,6 +5,8 @@ using IMS.UseCases.Products;
 using IMS.UseCases.Products.Interfaces;
 using IMS.UseCases.PluginInterfaces;
 using IMS.WebApp.Components;
+using IMS.UseCases.Activities.Interfaces;
+using IMS.UseCases.Activities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,4 +52,7 @@ static void RegisterServices(IServiceCollection services)
     services.AddTransient<IEditProductUseCase, EditProductUseCase>();
     services.AddTransient<IGetProductByIdUseCase, GetProductByIdUseCase>();
     services.AddTransient<IDeleteProductUseCase, DeleteProductUseCase>();
+    // Activities Services
+    services.AddSingleton<IInventoryTransactionRepository, InventoryTransactionRepository>();
+    services.AddTransient<IPurchaseInventoryUseCase, PurchaseInventoryUseCase>();
 }
