@@ -1,26 +1,26 @@
+﻿using IMS.CoreBusiness.Enums;
 using System.ComponentModel.DataAnnotations;
-using IMS.CoreBusiness.Enums;
 
 namespace IMS.CoreBusiness
 {
-    public class InventoryTransaction
+    public class ProductTransaction
     {
         public int Id { get; set; }
-        public string PONumber { get; set; } = string.Empty;
+        public string SONumber { get; set; } = string.Empty;
         public string ProductionNumber { get; set; } = string.Empty;
         [Required]
-        public int InventoryId { get; set; }
+        public int ProductId { get; set; }
         [Required]
         public int QuantityBefore { get; set; }
         [Required]
-        public InventoryTransactionType ActivityType { get; set; }
+        public ProductTransactionType ActivityType { get; set; }
         [Required]
         public int QuantityAfter { get; set; }
-        public decimal UnitPrice { get; set; }
+        public decimal? UnitPrice { get; set; } // this is for selling only
         [Required]
         public DateTime TransactionDate { get; set; }
         [Required]
         public string DoneBy { get; set; } = string.Empty;
-        public Inventory? Inventory { get; set; } = null;
+        public Product? Product { get; set; } = null;
     }
 }

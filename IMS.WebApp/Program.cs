@@ -54,5 +54,7 @@ static void RegisterServices(IServiceCollection services)
     services.AddTransient<IDeleteProductUseCase, DeleteProductUseCase>();
     // Activities Services
     services.AddSingleton<IInventoryTransactionRepository, InventoryTransactionRepository>();
+    services.AddSingleton<IProductTransactionRepository, ProductTransactionRepository>();
     services.AddTransient<IPurchaseInventoryUseCase, PurchaseInventoryUseCase>();
+    services.AddTransient<IProduceProductUseCase, ProduceProductUseCase>();
 }

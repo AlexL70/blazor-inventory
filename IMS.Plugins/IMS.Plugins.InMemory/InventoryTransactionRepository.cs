@@ -7,7 +7,7 @@ namespace IMS.Plugins.InMemory
     public class InventoryTransactionRepository : IInventoryTransactionRepository
     {
         private readonly List<InventoryTransaction> inventoryTransactions = new List<InventoryTransaction>();
-        public void PurchaseAsync(string poNumber, Inventory inventory, int quantity, string doneBy, decimal price)
+        public Task PurchaseAsync(string poNumber, Inventory inventory, int quantity, string doneBy, decimal price)
         {
             // Implementation for purchasing inventory transaction
             inventoryTransactions.Add(new InventoryTransaction
@@ -22,6 +22,24 @@ namespace IMS.Plugins.InMemory
                 UnitPrice = price,
                 Inventory = inventory
             });
+            return Task.CompletedTask;
+        }
+
+        Task IInventoryTransactionRepository.ProduceAsync(string productionNumber, Inventory inventory, int quantityToConsume, string doneBy)
+        {
+            inventoryTransactions.Add(new InventoryTransaction
+            {
+                ProductionNumber = productionNumber,
+                InventoryId = inventory.Id,
+                QuantityBefore = inventory.Quantity,
+                ActivityType = InventoryTransactionType.ProduceProduct,
+                QuantityAfter = inventory.Quantity - quantityToConsume,
+                TransactionDate = DateTime.UtcNow,
+                DoneBy = doneBy,
+                UnitPrice = inventory.Price,
+                Inventory = inventory
+            });
+            return Task.CompletedTask;
         }
     }
 }
