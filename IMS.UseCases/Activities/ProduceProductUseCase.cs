@@ -13,9 +13,6 @@ namespace IMS.UseCases.Activities
         {
             // add transaction record and decrease the quantity of inventories used
             await TransactionRepository.ProduceAsync(productionNumber, product, quantity, doneBy);
-            // increase the quantity of the product produced
-            product.Quantity += quantity;
-            await ProductRepository.UpdateProductAsync(product);
         }
     }
 }

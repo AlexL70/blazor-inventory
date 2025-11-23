@@ -51,5 +51,6 @@
         viewModel.ProductId = item.Id;
         selectedProduct = await getByIdUseCase.ExecuteAsync(item.Id);
         Console.WriteLine($"Selected Product: {selectedProduct?.Name}");
+        viewModel.Product = selectedProduct;
     }
 }

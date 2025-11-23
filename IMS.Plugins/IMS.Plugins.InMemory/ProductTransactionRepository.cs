@@ -22,6 +22,8 @@ namespace IMS.Plugins.InMemory
                 // decrease inventory quantity
                 inventory.Quantity -= prodInv.Quantity * quantity;
                 await invRepo.UpdateInventoryAsync(inventory);
+                // update inventory in product inventory
+                prodInv.Inventory = inventory;
             }
             // log product transaction
             productTransactions.Add(new ProductTransaction
@@ -30,7 +32,7 @@ namespace IMS.Plugins.InMemory
                 ProductId = product.Id,
                 QuantityBefore = product.Quantity,
                 ActivityType = ProductTransactionType.ProduceProduct,
-                QuantityAfter =  product.Quantity + quantity,
+                QuantityAfter = product.Quantity + quantity,
                 TransactionDate = DateTime.UtcNow,
                 DoneBy = doneBy,
                 UnitPrice = null,
