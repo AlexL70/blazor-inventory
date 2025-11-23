@@ -41,7 +41,7 @@
 @code {
     private PurchaseViewModel viewModel = new PurchaseViewModel();
     private Inventory? selectedInventory;
-    private List<ItemViewModel> SearchInventory(string query)
+    private IList<ItemViewModel> SearchInventory(string query)
     {
         return viewUseCase.ExecuteAsync(query).GetAwaiter().GetResult()
         .Select(inv => new ItemViewModel { Id = inv.Id, Name = inv.Name })
@@ -56,7 +56,7 @@
         Console.WriteLine($"Selected Inventory: {selectedInventory?.Name}");
         viewModel.InventoryPrice = selectedInventory!.Price;
     }
-    private async Task Purchase(EditContext args)
+    private async Task Purchase()
     {
         // !!! TODO: Replace "Alex" with logged in user
         await PurchaseUseCase.ExecuteAsync(viewModel.PONumber, selectedInventory!, viewModel.QuantityToPurchase, "Alex");

@@ -24,7 +24,7 @@
     [Parameter]
     public string Placeholder { get; set; } = "Type to search...";
     [Parameter]
-    public Func<string, List<ItemViewModel>>? SearchFunction { get; set; }
+    public Func<string, IList<ItemViewModel>>? SearchFunction { get; set; }
     [Parameter]
     public EventCallback<ItemViewModel> OnItemSelected { get; set; }
     private IList<ItemViewModel> searchResults = new List<ItemViewModel>();
