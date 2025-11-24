@@ -1,0 +1,71 @@
+@page "/sell"
+@inject IJSRuntime js;
+@rendermode InteractiveServer
+@inject IViewProductsByNameUseCase viewUseCase;
+@inject IGetProductByIdUseCase getByIdUseCase;
+@inject ISellProductUseCase sellUseCase;
+
+<h3>Sell Product</h3>
+<br />
+
+<EditForm id="sell-form" Model="viewModel" OnValidSubmit="Sell">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label for="so">Sell Order #</label>
+        <InputText id="so" class="form-control" @bind-Value="viewModel.SalesOrderNumber" />
+    </div>
+    <br />
+    <div class="form-group">
+        <AutoCompleteComponent Label="Search Product to Sell" Placeholder="Start typing to search product..."
+            SearchFunction="SearchProduct" OnItemSelected="OnProductSelected">
+        </AutoCompleteComponent>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="price">Unit Price</label>
+        <InputNumber id="price" class="form-control" @bind-Value="viewModel.UnitPrice" />
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="qty">Quantity</label>
+        <InputNumber id="qty" class="form-control" @bind-Value="viewModel.QuantityToSell" />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Sell</button>
+</EditForm>
+
+@code {
+    private SellViewModel viewModel = new SellViewModel();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            await js.InvokeVoidAsync("preventFormSubmitOnEnter", "sell-form");
+        }
+    }
+
+
+    private async Task Sell(EditContext args)
+    {
+        // !!! TODO: Replace "Alex" with logged in user
+        await sellUseCase.ExecuteAsync(viewModel.SalesOrderNumber, viewModel.Product!, viewModel.QuantityToSell,
+        viewModel.UnitPrice, "Alex");
+        viewModel = new SellViewModel();
+    }
+
+    private IList<ItemViewModel> SearchProduct(string query)
+    {
+        return viewUseCase.ExecuteAsync(query).GetAwaiter().GetResult()
+        .Select(prod => new ItemViewModel { Id = prod.Id, Name = prod.Name })
+        .ToList();
+    }
+    private async Task OnProductSelected(ItemViewModel item)
+    {
+        viewModel.ProductId = item.Id;
+        viewModel.Product = await getByIdUseCase.ExecuteAsync(item.Id);
+        viewModel.UnitPrice = viewModel.Product!.Price;
+    }
+}

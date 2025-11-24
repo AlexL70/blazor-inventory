@@ -42,7 +42,7 @@ namespace IMS.Plugins.InMemory
             await prodRepo.UpdateProductAsync(prod);
         }
 
-        public Task SellProductAsync(string salesOrderNumber, Product product, int quantity, string doneBy)
+        public Task SellProductAsync(string salesOrderNumber, Product product, int quantity, decimal priceToSell, string doneBy)
         {
             productTransactions.Add(new ProductTransaction
             {
