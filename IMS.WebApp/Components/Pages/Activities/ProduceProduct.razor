@@ -34,13 +34,17 @@
     private ProduceViewModel viewModel = new ProduceViewModel();
     private Product? selectedProduct = null;
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        base.OnAfterRender(firstRender);
+        OnAfterRender(firstRender);
         if (firstRender)
         {
-            js.InvokeVoidAsync("preventFormSubmitOnEnter", "produce-form");
+            await js.InvokeVoidAsync("preventFormSubmitOnEnter", "produce-form");
         }
+        // Example JSInterop usage (added in .NET 10): get document location and set document title
+        var url = await js.GetValueAsync<string>("document.location.href");
+        await js.InvokeVoidAsync("console.log", $"Window url from JSInterop: {url}");
+        await js.SetValueAsync("document.title", "Produce Product - IMS");
     }
 
     private async Task Produce()
