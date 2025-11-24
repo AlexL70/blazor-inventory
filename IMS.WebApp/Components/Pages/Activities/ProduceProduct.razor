@@ -2,11 +2,12 @@
 <h3>Produce Product</h3>
 <br />
 @rendermode InteractiveServer
+@inject IJSRuntime js;
 @inject IViewProductsByNameUseCase viewUseCase;
 @inject IGetProductByIdUseCase getByIdUseCase;
 @inject IProduceProductUseCase produceUseCase;
 
-<EditForm Model="viewModel" OnValidSubmit="Produce">
+<EditForm id="produce-form" Model="viewModel" OnValidSubmit="Produce">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="form-group">
@@ -32,6 +33,16 @@
 @code {
     private ProduceViewModel viewModel = new ProduceViewModel();
     private Product? selectedProduct = null;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            js.InvokeVoidAsync("preventFormSubmitOnEnter", "produce-form");
+        }
+    }
+
     private async Task Produce()
     {
         // !!! TODO: Replace "Alex" with logged in user

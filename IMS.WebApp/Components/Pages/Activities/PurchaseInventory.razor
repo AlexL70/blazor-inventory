@@ -1,12 +1,13 @@
 @page "/purchase"
 @using System.Threading.Tasks
 @rendermode InteractiveServer
+@inject IJSRuntime js;
 @inject IViewInventoriesByNameUserCase viewUseCase;
 @inject IGetInventoryByIdUseCase GetByIdUseCase;
 @inject IPurchaseInventoryUseCase PurchaseUseCase;
 <h3>Purchase Inventory</h3>
 <br />
-<EditForm Model="viewModel" OnValidSubmit="Purchase">
+<EditForm id="purchase-form" Model="viewModel" OnValidSubmit="Purchase">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="form-group">
@@ -41,6 +42,16 @@
 @code {
     private PurchaseViewModel viewModel = new PurchaseViewModel();
     private Inventory? selectedInventory;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            js.InvokeVoidAsync("preventFormSubmitOnEnter", "purchase-form");
+        }
+    }
+
     private IList<ItemViewModel> SearchInventory(string query)
     {
         return viewUseCase.ExecuteAsync(query).GetAwaiter().GetResult()
