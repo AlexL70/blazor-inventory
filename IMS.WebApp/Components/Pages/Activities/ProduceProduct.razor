@@ -55,9 +55,9 @@
         selectedProduct = null;
     }
 
-    private IList<ItemViewModel> SearchProduct(string query)
+    private async Task<IList<ItemViewModel>> SearchProduct(string query)
     {
-        return viewUseCase.ExecuteAsync(query).GetAwaiter().GetResult()
+        return (await viewUseCase.ExecuteAsync(query))
         .Select(prod => new ItemViewModel { Id = prod.Id, Name = prod.Name })
         .ToList();
     }

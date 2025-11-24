@@ -52,9 +52,9 @@
         }
     }
 
-    private IList<ItemViewModel> SearchInventory(string query)
+    private async Task<IList<ItemViewModel>> SearchInventory(string query)
     {
-        return viewUseCase.ExecuteAsync(query).GetAwaiter().GetResult()
+        return (await viewUseCase.ExecuteAsync(query))
         .Select(inv => new ItemViewModel { Id = inv.Id, Name = inv.Name })
         .ToList();
     }

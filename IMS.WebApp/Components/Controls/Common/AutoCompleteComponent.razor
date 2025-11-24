@@ -24,7 +24,7 @@
     [Parameter]
     public string Placeholder { get; set; } = "Type to search...";
     [Parameter]
-    public Func<string, IList<ItemViewModel>>? SearchFunction { get; set; }
+    public Func<string, Task<IList<ItemViewModel>>>? SearchFunction { get; set; }
     [Parameter]
     public EventCallback<ItemViewModel> OnItemSelected { get; set; }
     private IList<ItemViewModel> searchResults = new List<ItemViewModel>();
@@ -40,9 +40,21 @@
             _userInput = value;
             if (SearchFunction != null)
             {
-                searchResults = SearchFunction.Invoke(value);
+#pragma warning disable CS4014
+                _ = SearchFunctionAsync(value); // It is okay leave the setter before tha search completes
+#pragma warning restore CS4014
             }
         }
+    }
+
+    private async Task SearchFunctionAsync(string query)
+    {
+        if (SearchFunction != null)
+        {
+            searchResults = await SearchFunction.Invoke(query);
+        }
+        // Because this is called from a property setter, we need to manually trigger UI update
+        StateHasChanged();
     }
 
     private void HandleSelectItem(ItemViewModel item)
