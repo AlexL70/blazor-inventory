@@ -42,6 +42,29 @@ namespace IMS.Plugins.InMemory
             await prodRepo.UpdateProductAsync(prod);
         }
 
+        public async Task<IEnumerable<ProductTransaction>> SearchProductTransactionsAsync(DateTime? startDate, DateTime? endDate, string? productName, ProductTransactionType? activityType)
+        {
+            var products = await prodRepo.GetProductsByNameAsync(productName ?? string.Empty);
+            var inventories = await invRepo.GetInventoriesByNameAsync(string.Empty);
+            var query = productTransactions.Where(pt =>
+                (!startDate.HasValue || pt.TransactionDate >= startDate.Value) &&
+                (!endDate.HasValue || pt.TransactionDate <= endDate.Value) &&
+                (string.IsNullOrWhiteSpace(productName) || prodRepo.GetProductByIdAsync(pt.ProductId).Result.Name.Contains(productName, StringComparison.OrdinalIgnoreCase)) &&
+                (!activityType.HasValue || pt.ActivityType == activityType.Value)
+            ).Join(products, pt => pt.ProductId, p => p.Id, (pt, p) => pt)
+            .Select(pt =>
+            {
+                var prod = products.First(p => p.Id == pt.ProductId);
+                pt.Product = prod;
+                foreach (var prodInv in prod.Inventories)
+                {
+                    prodInv.Inventory = inventories.First(i => i.Id == prodInv.InventoryId);
+                }
+                return pt;
+            });
+            return query;
+        }
+
         public Task SellProductAsync(string salesOrderNumber, Product product, int quantity, decimal priceToSell, string doneBy)
         {
             productTransactions.Add(new ProductTransaction

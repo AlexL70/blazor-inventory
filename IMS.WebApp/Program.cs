@@ -62,4 +62,5 @@ static void RegisterServices(IServiceCollection services)
     services.AddTransient<ISellProductUseCase, SellProductUseCase>();
     // Reports Services
     services.AddTransient<ISearchInventoryTransactionsUseCase, SearchInventoryTransactionsUseCase>();
+    services.AddTransient<ISearchProductTransactionsUseCase, SearchProductTransactionsUseCase>();
 }
