@@ -1,15 +1,14 @@
-@page "/reports/inventory-transactions"
+@page "/reports/product-transactions"
 @using IMS.CoreBusiness.Enums
 @using IMS.UseCases.Reports.Interfaces
 @rendermode InteractiveServer
-@inject ISearchInventoryTransactionsUseCase searchUseCase;
-
-<h3>Inventory Transactions</h3>
+@inject ISearchProductTransactionsUseCase searchUseCase;
+<h3>Product Transactions</h3>
 
 <div class="row">
     <div class="col-2">
-        <label for="inv">Inventory Name</label>
-        <input id="inv" type="text" class="form-control" @bind-value="invName" />
+        <label for="prod">Product Name</label>
+        <input id="prod" type="text" class="form-control" @bind-value="prodName" />
     </div>
     <div class="col-2">
         <label for="dateFrom">Date From</label>
@@ -23,7 +22,7 @@
         <label for="activityType">Activity Type</label>
         <select id="activityType" class="form-control" @bind="activityType">
             <option value="">-- Select Activity Type --</option>
-            @foreach (var type in Enum.GetValues<InventoryTransactionType>())
+            @foreach (var type in Enum.GetValues<ProductTransactionType>())
             {
                 <option value="@type">@Utils.SplitCamelCase(type.ToString())</option>
             }
@@ -31,7 +30,7 @@
     </div>
     <div class="col-2">
         <label>&nbsp;"</label>
-        <button class="btn btn-primary form-control" @onclick="SearchInventories">Search</button>
+        <button class="btn btn-primary form-control" @onclick="SearchProducts">Search</button>
     </div>
     <div class="col-2">&nbsp;</div>
 </div>
@@ -42,12 +41,12 @@
         <thead>
             <tr>
                 <th>Date</th>
-                <th>Inventory</th>
+                <th>Product</th>
                 <th>Activity</th>
                 <th>Qty Before</th>
                 <th>Qty After</th>
                 <th>Unit Price</th>
-                <th>PO#</th>
+                <th>SO#</th>
                 <th>Production #</th>
             </tr>
         </thead>
@@ -56,12 +55,12 @@
             {
                 <tr>
                     <td>@it.TransactionDate.ToString("yyyy-MM-dd HH:mm")</td>
-                    <td>@it.Inventory!.Name</td>
+                    <td>@it.Product!.Name</td>
                     <td>@Utils.SplitCamelCase(it.ActivityType.ToString())</td>
                     <td>@it.QuantityBefore</td>
                     <td>@it.QuantityAfter</td>
-                    <td>@it.UnitPrice.ToString("C"))</td>
-                    <td>@(it.PONumber ?? "-")</td>
+                    <td>@(it.UnitPrice.HasValue? it.UnitPrice.Value.ToString("C") : "-")</td>
+                    <td>@(it.SONumber ?? "-")</td>
                     <td>@(it.ProductionNumber ?? "-")</td>
                 </tr>
             }
@@ -70,15 +69,15 @@
 }
 
 @code {
-    private string? invName;
+    private string? prodName;
     private DateTime? dateFrom;
     private DateTime? dateTo;
-    private InventoryTransactionType? activityType;
+    private ProductTransactionType? activityType;
 
-    private IEnumerable<InventoryTransaction>? searchResults;
+    private IEnumerable<ProductTransaction>? searchResults;
 
-    private async Task SearchInventories()
+    private async Task SearchProducts()
     {
-        searchResults = await searchUseCase.ExecuteAsync(dateFrom, dateTo, invName, activityType);
+        searchResults = await searchUseCase.ExecuteAsync(dateFrom, dateTo, prodName, activityType);
     }
 }

@@ -4,12 +4,54 @@ using IMS.UseCases.PluginInterfaces;
 
 namespace IMS.Plugins.InMemory
 {
-    public class ProductTransactionRepository(IProductRepository prodRepo, IInventoryRepository invRepo, IInventoryTransactionRepository invTranRepo) : IProductTransactionRepository
+    public class ProductTransactionRepository : IProductTransactionRepository
     {
-        private IList<ProductTransaction> productTransactions { get; } = new List<ProductTransaction>();
-        private IProductRepository prodRepo { get; } = prodRepo;
-        private IInventoryRepository invRepo { get; } = invRepo;
-        private IInventoryTransactionRepository invTranRepo { get; } = invTranRepo;
+        private readonly IList<ProductTransaction> productTransactions;
+        private readonly IProductRepository prodRepo;
+        private readonly IInventoryRepository invRepo;
+        private readonly IInventoryTransactionRepository invTranRepo;
+
+        public ProductTransactionRepository(IProductRepository prodRepo, IInventoryRepository invRepo, IInventoryTransactionRepository invTranRepo)
+        {
+            this.prodRepo = prodRepo;
+            this.invRepo = invRepo;
+            this.invTranRepo = invTranRepo;
+            productTransactions = new List<ProductTransaction>();
+
+            // Seed one transaction per product seeded in ProductRepository
+            var products = this.prodRepo.GetProductsByNameAsync(string.Empty).GetAwaiter().GetResult().ToList();
+            var rng = new Random();
+            var today = DateTime.Today;
+            var start = today.AddMonths(-1);
+            var daySpan = (today - start).Days;
+            var id = 1;
+
+            foreach (var p in products)
+            {
+                var isSell = rng.Next(2) == 0; // 50/50
+                var delta = Math.Max(1, Math.Min(5, Math.Max(1, p.Quantity / 4)));
+                var txDate = start.AddDays(rng.Next(daySpan + 1))
+                                  .AddHours(rng.Next(0, 24))
+                                  .AddMinutes(rng.Next(0, 60));
+
+                var tx = new ProductTransaction
+                {
+                    Id = id++,
+                    SONumber = isSell ? $"SO-{1000 + p.Id}" : string.Empty,
+                    ProductionNumber = isSell ? string.Empty : $"PRD-{1000 + p.Id}",
+                    ProductId = p.Id,
+                    QuantityBefore = isSell ? p.Quantity + delta : Math.Max(0, p.Quantity - delta),
+                    ActivityType = isSell ? ProductTransactionType.SellProduct : ProductTransactionType.ProduceProduct,
+                    QuantityAfter = p.Quantity,
+                    UnitPrice = isSell ? p.Price : null, // selling only
+                    TransactionDate = txDate,
+                    DoneBy = "System",
+                    // Product left null; it will be populated during queries
+                };
+
+                productTransactions.Add(tx);
+            }
+        }
 
         public async Task ProduceAsync(string productionNumber, Product product, int quantity, string doneBy)
         {
