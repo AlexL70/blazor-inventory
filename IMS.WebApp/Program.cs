@@ -7,6 +7,8 @@ using IMS.UseCases.PluginInterfaces;
 using IMS.WebApp.Components;
 using IMS.UseCases.Activities.Interfaces;
 using IMS.UseCases.Activities;
+using IMS.UseCases.Reports.Interfaces;
+using IMS.UseCases.Reports;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,4 +60,6 @@ static void RegisterServices(IServiceCollection services)
     services.AddTransient<IPurchaseInventoryUseCase, PurchaseInventoryUseCase>();
     services.AddTransient<IProduceProductUseCase, ProduceProductUseCase>();
     services.AddTransient<ISellProductUseCase, SellProductUseCase>();
+    // Reports Services
+    services.AddTransient<ISearchInventoryTransactionsUseCase, SearchInventoryTransactionsUseCase>();
 }
