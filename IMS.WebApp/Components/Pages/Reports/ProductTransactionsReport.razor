@@ -3,70 +3,76 @@
 @using IMS.UseCases.Reports.Interfaces
 @rendermode InteractiveServer
 @inject ISearchProductTransactionsUseCase searchUseCase;
+@inject IJSRuntime js;
 <h3>Product Transactions</h3>
 
-<div class="row">
-    <div class="col-2">
-        <label for="prod">Product Name</label>
-        <input id="prod" type="text" class="form-control" @bind-value="prodName" />
+<div id="printarea">
+    <div class="row">
+        <div class="col-2">
+            <label for="prod">Product Name</label>
+            <input id="prod" type="text" class="form-control" @bind-value="prodName" />
+        </div>
+        <div class="col-2">
+            <label for="dateFrom">Date From</label>
+            <input id="dateFrom" type="date" class="form-control" @bind-value="dateFrom" />
+        </div>
+        <div class="col-2">
+            <label for="dateTo">Date To</label>
+            <input id="dateTo" type="date" class="form-control" @bind-value="dateTo" />
+        </div>
+        <div class="col-2">
+            <label for="activityType">Activity Type</label>
+            <select id="activityType" class="form-control" @bind="activityType">
+                <option value="">-- Select Activity Type --</option>
+                @foreach (var type in Enum.GetValues<ProductTransactionType>())
+                {
+                    <option value="@type">@Utils.SplitCamelCase(type.ToString())</option>
+                }
+            </select>
+        </div>
+        <div class="col-2">
+            <label>&nbsp;"</label>
+            <button class="btn btn-primary form-control" @onclick="SearchProducts">Search</button>
+        </div>
+        <div class="col-2">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary form-control" @onclick="Print">Print</button>
+        </div>
     </div>
-    <div class="col-2">
-        <label for="dateFrom">Date From</label>
-        <input id="dateFrom" type="date" class="form-control" @bind-value="dateFrom" />
-    </div>
-    <div class="col-2">
-        <label for="dateTo">Date To</label>
-        <input id="dateTo" type="date" class="form-control" @bind-value="dateTo" />
-    </div>
-    <div class="col-2">
-        <label for="activityType">Activity Type</label>
-        <select id="activityType" class="form-control" @bind="activityType">
-            <option value="">-- Select Activity Type --</option>
-            @foreach (var type in Enum.GetValues<ProductTransactionType>())
-            {
-                <option value="@type">@Utils.SplitCamelCase(type.ToString())</option>
-            }
-        </select>
-    </div>
-    <div class="col-2">
-        <label>&nbsp;"</label>
-        <button class="btn btn-primary form-control" @onclick="SearchProducts">Search</button>
-    </div>
-    <div class="col-2">&nbsp;</div>
-</div>
 
-@if (searchResults != null && searchResults.Any())
-{
-    <table class="table table-striped mt-3">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Product</th>
-                <th>Activity</th>
-                <th>Qty Before</th>
-                <th>Qty After</th>
-                <th>Unit Price</th>
-                <th>SO#</th>
-                <th>Production #</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var it in searchResults)
-            {
+    @if (searchResults != null && searchResults.Any())
+    {
+        <table class="table table-striped mt-3">
+            <thead>
                 <tr>
-                    <td>@it.TransactionDate.ToString("yyyy-MM-dd HH:mm")</td>
-                    <td>@it.Product!.Name</td>
-                    <td>@Utils.SplitCamelCase(it.ActivityType.ToString())</td>
-                    <td>@it.QuantityBefore</td>
-                    <td>@it.QuantityAfter</td>
-                    <td>@(it.UnitPrice.HasValue? it.UnitPrice.Value.ToString("C") : "-")</td>
-                    <td>@(it.SONumber ?? "-")</td>
-                    <td>@(it.ProductionNumber ?? "-")</td>
+                    <th>Date</th>
+                    <th>Product</th>
+                    <th>Activity</th>
+                    <th>Qty Before</th>
+                    <th>Qty After</th>
+                    <th>Unit Price</th>
+                    <th>SO#</th>
+                    <th>Production #</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
+            </thead>
+            <tbody>
+                @foreach (var it in searchResults)
+                {
+                    <tr>
+                        <td>@it.TransactionDate.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@it.Product!.Name</td>
+                        <td>@Utils.SplitCamelCase(it.ActivityType.ToString())</td>
+                        <td>@it.QuantityBefore</td>
+                        <td>@it.QuantityAfter</td>
+                        <td>@(it.UnitPrice.HasValue? it.UnitPrice.Value.ToString("C") : "-")</td>
+                        <td>@(it.SONumber ?? "-")</td>
+                        <td>@(it.ProductionNumber ?? "-")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
 
 @code {
     private string? prodName;
@@ -79,5 +85,9 @@
     private async Task SearchProducts()
     {
         searchResults = await searchUseCase.ExecuteAsync(dateFrom, dateTo, prodName, activityType);
+    }
+    private async Task Print(MouseEventArgs args)
+    {
+        await js.InvokeVoidAsync("window.print");
     }
 }
