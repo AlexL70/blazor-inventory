@@ -1,0 +1,96 @@
+@page "/reports/inventory-transactions"
+@using IMS.CoreBusiness.Enums
+@using IMS.UseCases.Reports.Interfaces
+@rendermode InteractiveServer
+@inject ISearchInventoryTransactionsUseCase searchUseCase;
+
+<h3>Inventory Transactions</h3>
+
+<div class="row">
+    <div class="col-2">
+        <label for="inv">Inventory Name</label>
+        <input id="inv" type="text" class="form-control" @bind-value="invName" />
+    </div>
+    <div class="col-2">
+        <label for="dateFrom">Date From</label>
+        <input id="dateFrom" type="date" class="form-control" @bind-value="dateFrom" />
+    </div>
+    <div class="col-2">
+        <label for="dateTo">Date To</label>
+        <input id="dateTo" type="date" class="form-control" @bind-value="dateTo" />
+    </div>
+    <div class="col-2">
+        <label for="activityType">Activity Type</label>
+        <select id="activityType" class="form-control" @bind="activityType">
+            <option value="">-- Select Activity Type --</option>
+            @foreach (var type in Enum.GetValues<InventoryTransactionType>())
+            {
+                <option value="@type">@SplitCamelCase(type.ToString())</option>
+            }
+        </select>
+    </div>
+    <div class="col-2">
+        <label>&nbsp;"</label>
+        <button class="btn btn-primary form-control" @onclick="SearchInventories">Search</button>
+    </div>
+    <div class="col-2">Content 6</div>
+</div>
+
+@if (searchResults != null && searchResults.Any())
+{
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Inventory</th>
+                <th>Activity</th>
+                <th>Qty Before</th>
+                <th>Qty After</th>
+                <th>PO#</th>
+                <th>Production #</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var it in searchResults)
+            {
+                <tr>
+                    <td>@it.TransactionDate.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@it.Inventory!.Name</td>
+                    <td>@SplitCamelCase(it.ActivityType.ToString())</td>
+                    <td>@it.QuantityBefore</td>
+                    <td>@it.QuantityAfter</td>
+                    <td>@(it.PONumber ?? "-")</td>
+                    <td>@(it.ProductionNumber ?? "-")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private string? invName;
+    private DateTime? dateFrom;
+    private DateTime? dateTo;
+    private InventoryTransactionType? activityType;
+
+    private IEnumerable<InventoryTransaction>? searchResults;
+
+    private string SplitCamelCase(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return input;
+
+        var result = new System.Text.StringBuilder();
+        foreach (var c in input)
+        {
+            if (char.IsUpper(c) && result.Length > 0)
+                result.Append(' ');
+            result.Append(c);
+        }
+        return result.ToString();
+    }
+    private async Task SearchInventories()
+    {
+        searchResults = await searchUseCase.ExecuteAsync(dateFrom, dateTo, invName, activityType);
+    }
+}
