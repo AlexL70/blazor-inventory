@@ -15,7 +15,7 @@ namespace IMS.CoreBusiness
         public decimal Price { get; set; }
 
         [ProductPriceVsInventoriesCostValidation]
-        public IList<ProductInventory> Inventories { get; set; } = [];
+        public ICollection<ProductInventory> Inventories { get; set; } = [];
 
         public void AddInventory(Inventory inventory)
         {
