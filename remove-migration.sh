@@ -1,0 +1,1 @@
+dotnet ef migrations remove --project IMS.Plugins/IMS.Plugins.EFCoreSqlServer --startup-project IMS.WebApp

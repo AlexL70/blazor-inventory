@@ -1,4 +1,5 @@
 using IMS.Plugins.InMemory;
+using IMS.Plugins.EFCoreSqlServer;
 using IMS.UseCases.Inventories;
 using IMS.UseCases.Inventories.Interfaces;
 using IMS.UseCases.Products;
@@ -9,8 +10,16 @@ using IMS.UseCases.Activities.Interfaces;
 using IMS.UseCases.Activities;
 using IMS.UseCases.Reports.Interfaces;
 using IMS.UseCases.Reports;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure DB context
+builder.Services.AddDbContextFactory<IMSContext>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("InventoryManagement");
+    options.UseSqlServer(connectionString);
+});
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IMS.Plugins.EFCoreSqlServer
 {
-    public class IMSContext : DbContext
+    public class IMSContext(DbContextOptions<IMSContext> options) : DbContext(options)
     {
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -91,6 +91,10 @@ namespace IMS.Plugins.EFCoreSqlServer
 
         protected virtual void DefineConfigurations(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new InventoryConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductTransactionConfiguration());
+            modelBuilder.ApplyConfiguration(new InventoryTransactionConfiguration());
             modelBuilder.ApplyConfiguration(new ProductInventoryConfiguration());
         }
     }
