@@ -1,0 +1,15 @@
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
+    hostname: mssql_local_docker
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=LocalPwd123!
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+
+volumes:
+  sqldata:
