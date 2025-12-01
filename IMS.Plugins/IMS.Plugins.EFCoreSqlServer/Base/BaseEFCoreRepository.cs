@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using IMS.CoreBusiness.Exceptions;
 using IMS.CoreBusiness.Interfaces;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 
 namespace IMS.Plugins.EFCoreSqlServer.Base
@@ -47,8 +48,18 @@ namespace IMS.Plugins.EFCoreSqlServer.Base
             var context = await contextFactory.CreateDbContextAsync();
             if (!string.IsNullOrWhiteSpace(searchString))
             {
-                Expression<Func<T, bool>> newPredicate = e => searchPredicate.Compile()(e, searchString);
-                return await context.Set<T>().Where(newPredicate).ToListAsync();
+                // Expression<Func<T, bool>> newPredicate = e => searchPredicate.Compile()(e, searchString);
+                var predicate = PredicateBuilder.New<T>();
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    // Build the predicate using the provided searchPredicate expression
+                    // by eliminating the string parameter and replacing it with the searchString value
+                    var parameter = Expression.Parameter(typeof(T), "e");
+                    predicate = predicate.Or(Expression.Lambda<Func<T, bool>>(
+                        Expression.Invoke(searchPredicate, parameter, Expression.Constant(searchString)),
+                        parameter));
+                }
+                return await context.Set<T>().Where(predicate).ToListAsync();
             }
             else
             {
@@ -56,10 +67,10 @@ namespace IMS.Plugins.EFCoreSqlServer.Base
             }
         }
 
-        public Task<T> GetByIdAsync(int Id)
+        public async Task<T> GetByIdAsync(int Id)
         {
             using var context = contextFactory.CreateDbContext();
-            return DoGetByIdAsync(context, Id);
+            return await DoGetByIdAsync(context, Id);
         }
 
         public async Task UpdateAsync(T entity)
@@ -77,7 +88,7 @@ namespace IMS.Plugins.EFCoreSqlServer.Base
 
         protected virtual async Task<T> DoGetByIdAsync(IMSContext context, int Id)
         {
-            var inventory = await context.Set<T>().FirstOrDefaultAsync(x => x.Id == Id)
+            var inventory = (await context.Set<T>().FirstOrDefaultAsync(x => x.Id == Id))
                 ?? throw new NotFoundException(typeof(T), Id.ToString());
             return inventory;
         }

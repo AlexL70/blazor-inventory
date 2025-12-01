@@ -11,6 +11,7 @@ using IMS.UseCases.Activities;
 using IMS.UseCases.Reports.Interfaces;
 using IMS.UseCases.Reports;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,7 @@ builder.Services.AddDbContextFactory<IMSContext>(options =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+RegisterRepositories(builder);
 RegisterServices(builder.Services);
 
 var app = builder.Build();
@@ -47,25 +49,42 @@ app.MapRazorComponents<App>()
 
 app.Run();
 
+static void RegisterRepositories(WebApplicationBuilder builder)
+{
+    if (builder.Environment.IsEnvironment("Testing"))
+    {
+        StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration);
+        Console.WriteLine("Using In-Memory Repositories for Testing");
+        builder.Services.AddSingleton<IInventoryRepository, InventoryRepository>();
+        builder.Services.AddSingleton<IProductRepository, ProductRepository>();
+        builder.Services.AddSingleton<IInventoryTransactionRepository, InventoryTransactionRepository>();
+        builder.Services.AddSingleton<IProductTransactionRepository, ProductTransactionRepository>();
+    }
+    else
+    {
+        Console.WriteLine("Using EF Core SQL Server Repositories");
+        builder.Services.AddTransient<IInventoryRepository, InventoryEFCoreRepository>();
+        builder.Services.AddTransient<IProductRepository, ProductEFCoreRepository>();
+        builder.Services.AddTransient<IInventoryTransactionRepository, InventoryTransactionEFCoreRepository>();
+        builder.Services.AddTransient<IProductTransactionRepository, ProductTransactionEFCoreRepository>();
+    }
+}
+
 static void RegisterServices(IServiceCollection services)
 {
     // Inventory Management Services
-    services.AddSingleton<IInventoryRepository, InventoryRepository>();
     services.AddTransient<IViewInventoriesByNameUserCase, ViewInventoriesByNameUserCase>();
     services.AddTransient<IAddInventoryUseCase, AddInventoryUseCase>();
     services.AddTransient<IEditInventoryUseCase, EditInventoryUseCase>();
     services.AddTransient<IGetInventoryByIdUseCase, GetInventoryByIdUseCase>();
     services.AddTransient<IDeleteInventoryUseCase, DeleteInventoryUseCase>();
     // Product Management Services
-    services.AddSingleton<IProductRepository, ProductRepository>();
     services.AddTransient<IViewProductsByNameUseCase, ViewProductsByNameUseCase>();
     services.AddTransient<IAddProductUseCase, AddProductUseCase>();
     services.AddTransient<IEditProductUseCase, EditProductUseCase>();
     services.AddTransient<IGetProductByIdUseCase, GetProductByIdUseCase>();
     services.AddTransient<IDeleteProductUseCase, DeleteProductUseCase>();
     // Activities Services
-    services.AddSingleton<IInventoryTransactionRepository, InventoryTransactionRepository>();
-    services.AddSingleton<IProductTransactionRepository, ProductTransactionRepository>();
     services.AddTransient<IPurchaseInventoryUseCase, PurchaseInventoryUseCase>();
     services.AddTransient<IProduceProductUseCase, ProduceProductUseCase>();
     services.AddTransient<ISellProductUseCase, SellProductUseCase>();
