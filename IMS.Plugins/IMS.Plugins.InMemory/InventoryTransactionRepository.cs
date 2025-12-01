@@ -248,7 +248,7 @@ namespace IMS.Plugins.InMemory
 
         public async Task<IEnumerable<InventoryTransaction>> SearchInventoryTransactionsAsync(DateTime? startDate, DateTime? endDate, string? inventoryName, InventoryTransactionType? activityType)
         {
-            var inventories = (await invRepo.GetInventoriesByNameAsync(inventoryName ?? string.Empty)).ToList();
+            var inventories = (await invRepo.GetByNameAsync(inventoryName ?? string.Empty)).ToList();
             var query = inventoryTransactions.Where(it =>
                 (!startDate.HasValue || it.TransactionDate >= startDate.Value) &&
                 (!endDate.HasValue || it.TransactionDate <= endDate.Value) &&

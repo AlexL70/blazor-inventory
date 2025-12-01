@@ -14,12 +14,12 @@ namespace IMS.UseCases.Inventories
 
         public async Task ExecuteAsync(int inventoryId)
         {
-            var inventory = await repository.GetInventoryByIdAsync(inventoryId);
+            var inventory = await repository.GetByIdAsync(inventoryId);
             if (inventory == null)
             {
                 throw new ArgumentException($"Inventory with Id={inventoryId} does not exist.");
             }
-            await repository.DeleteInventoryAsync(inventoryId);
+            await repository.DeleteAsync(inventoryId);
         }
     }
 }

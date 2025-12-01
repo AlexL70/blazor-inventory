@@ -16,7 +16,7 @@ namespace IMS.UseCases.Activities
             await tranRepo.PurchaseAsync(poNumber, inventory, quantity, doneBy, inventory.Price);
             // increase the inventory quantity
             inventory.Quantity += quantity;
-            await invRepo.UpdateInventoryAsync(inventory);
+            await invRepo.UpdateAsync(inventory);
         }
     }
 }

@@ -16,12 +16,12 @@ namespace IMS.UseCases.Products
 
         public async Task ExecuteAsync(int productId)
         {
-            var product = await repository.GetProductByIdAsync(productId);
+            var product = await repository.GetByIdAsync(productId);
             if (product == null)
             {
                 throw new NotFoundException(typeof(Product), productId.ToString());
             }
-            await repository.DeleteProductAsync(productId);
+            await repository.DeleteAsync(productId);
         }
     }
 }

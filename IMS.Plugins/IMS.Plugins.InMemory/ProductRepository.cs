@@ -33,7 +33,7 @@ namespace IMS.Plugins.InMemory
             products.Add(new Product { Id = 20, Name = "KTM 390 Duke", Quantity = 11, Price = 5500 });
         }
 
-        public Task AddProductAsync(Product Product)
+        public Task AddAsync(Product Product)
         {
             if (Product.Id != 0 && products.Any(i => i.Id == Product.Id))
             {
@@ -52,13 +52,13 @@ namespace IMS.Plugins.InMemory
             return Task.CompletedTask;
         }
 
-        public async Task DeleteProductAsync(int ProductId)
+        public async Task DeleteAsync(int ProductId)
         {
-            var Product = await GetProductByIdAsync(ProductId);
+            var Product = await GetByIdAsync(ProductId);
             products.Remove(Product);
         }
 
-        public Task<IEnumerable<Product>> GetProductsByNameAsync(string name)
+        public Task<IEnumerable<Product>> GetByNameAsync(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -68,7 +68,7 @@ namespace IMS.Plugins.InMemory
             return Task.FromResult(result);
         }
 
-        public Task<Product> GetProductByIdAsync(int ProductId)
+        public Task<Product> GetByIdAsync(int ProductId)
         {
             var product = products.FirstOrDefault(i => i.Id == ProductId);
             if (product == null)
@@ -100,7 +100,7 @@ namespace IMS.Plugins.InMemory
             });
         }
 
-        public Task UpdateProductAsync(Product Product)
+        public Task UpdateAsync(Product Product)
         {
             var invToUpdate = products.FirstOrDefault(i => i.Id == Product.Id);
             if (invToUpdate == null)

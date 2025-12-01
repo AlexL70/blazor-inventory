@@ -19,7 +19,7 @@ namespace IMS.Plugins.InMemory
             productTransactions = new List<ProductTransaction>();
 
             // Seed one transaction per product seeded in ProductRepository
-            var products = this.prodRepo.GetProductsByNameAsync(string.Empty).GetAwaiter().GetResult().ToList();
+            var products = this.prodRepo.GetByNameAsync(string.Empty).GetAwaiter().GetResult().ToList();
             var rng = new Random();
             var today = DateTime.Today;
             var start = today.AddMonths(-1);
@@ -55,15 +55,15 @@ namespace IMS.Plugins.InMemory
 
         public async Task ProduceAsync(string productionNumber, Product product, int quantity, string doneBy)
         {
-            var prod = await prodRepo.GetProductByIdAsync(product.Id);
+            var prod = await prodRepo.GetByIdAsync(product.Id);
             foreach (var prodInv in prod.Inventories)
             {
-                var inventory = await invRepo.GetInventoryByIdAsync(prodInv.InventoryId);
+                var inventory = await invRepo.GetByIdAsync(prodInv.InventoryId);
                 // log inventory transaction
                 await invTranRepo.ProduceAsync(productionNumber, inventory, prodInv.Quantity * quantity, doneBy);
                 // decrease inventory quantity
                 inventory.Quantity -= prodInv.Quantity * quantity;
-                await invRepo.UpdateInventoryAsync(inventory);
+                await invRepo.UpdateAsync(inventory);
                 // update inventory in product inventory
                 prodInv.Inventory = inventory;
             }
@@ -81,17 +81,17 @@ namespace IMS.Plugins.InMemory
             });
             // increase product quantity
             prod.Quantity += quantity;
-            await prodRepo.UpdateProductAsync(prod);
+            await prodRepo.UpdateAsync(prod);
         }
 
         public async Task<IEnumerable<ProductTransaction>> SearchProductTransactionsAsync(DateTime? startDate, DateTime? endDate, string? productName, ProductTransactionType? activityType)
         {
-            var products = await prodRepo.GetProductsByNameAsync(productName ?? string.Empty);
-            var inventories = await invRepo.GetInventoriesByNameAsync(string.Empty);
+            var products = await prodRepo.GetByNameAsync(productName ?? string.Empty);
+            var inventories = await invRepo.GetByNameAsync(string.Empty);
             var query = productTransactions.Where(pt =>
                 (!startDate.HasValue || pt.TransactionDate >= startDate.Value) &&
                 (!endDate.HasValue || pt.TransactionDate <= endDate.Value) &&
-                (string.IsNullOrWhiteSpace(productName) || prodRepo.GetProductByIdAsync(pt.ProductId).Result.Name.Contains(productName, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrWhiteSpace(productName) || prodRepo.GetByIdAsync(pt.ProductId).Result.Name.Contains(productName, StringComparison.OrdinalIgnoreCase)) &&
                 (!activityType.HasValue || pt.ActivityType == activityType.Value)
             ).Join(products, pt => pt.ProductId, p => p.Id, (pt, p) => pt)
             .Select(pt =>

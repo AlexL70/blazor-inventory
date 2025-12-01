@@ -28,7 +28,7 @@ namespace IMS.Plugins.InMemory
             _inventories.Add(new Inventory { Id = 15, Name = "Tire (Front)", Quantity = 30, Price = 22.00m });
         }
 
-        public Task AddInventoryAsync(Inventory inventory)
+        public Task AddAsync(Inventory inventory)
         {
             if (inventory.Id != 0 && _inventories.Any(i => i.Id == inventory.Id))
             {
@@ -47,13 +47,13 @@ namespace IMS.Plugins.InMemory
             return Task.CompletedTask;
         }
 
-        public async Task DeleteInventoryAsync(int inventoryId)
+        public async Task DeleteAsync(int inventoryId)
         {
-            var inventory = await GetInventoryByIdAsync(inventoryId);
+            var inventory = await GetByIdAsync(inventoryId);
             _inventories.Remove(inventory);
         }
 
-        public Task<IEnumerable<Inventory>> GetInventoriesByNameAsync(string name)
+        public Task<IEnumerable<Inventory>> GetByNameAsync(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -63,7 +63,7 @@ namespace IMS.Plugins.InMemory
             return Task.FromResult(result);
         }
 
-        public Task<Inventory> GetInventoryByIdAsync(int inventoryId)
+        public Task<Inventory> GetByIdAsync(int inventoryId)
         {
             var inventory = _inventories.FirstOrDefault(i => i.Id == inventoryId);
             if (inventory == null)
@@ -79,7 +79,7 @@ namespace IMS.Plugins.InMemory
             });
         }
 
-        public Task UpdateInventoryAsync(Inventory inventory)
+        public Task UpdateAsync(Inventory inventory)
         {
             var invToUpdate = _inventories.FirstOrDefault(i => i.Id == inventory.Id);
             if (invToUpdate == null)

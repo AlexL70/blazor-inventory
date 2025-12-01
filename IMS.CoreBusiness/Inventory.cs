@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using IMS.CoreBusiness.Interfaces;
 
 namespace IMS.CoreBusiness
 {
-    public class Inventory
+    public class Inventory : ICoreBusinessEntity
     {
         public int Id { get; set; }
         [Required]

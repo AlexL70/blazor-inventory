@@ -14,7 +14,7 @@ namespace IMS.UseCases.Activities
         {
             await tranRepo.SellProductAsync(salesOrderNumber, product, quantity, priceToSell, doneBy);
             product.Quantity -= quantity;
-            await prodRepo.UpdateProductAsync(product);
+            await prodRepo.UpdateAsync(product);
         }
     }
 }

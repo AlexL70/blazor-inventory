@@ -4,10 +4,10 @@ namespace IMS.UseCases.PluginInterfaces
 {
     public interface IInventoryRepository
     {
-        Task<IEnumerable<Inventory>> GetInventoriesByNameAsync(string name);
-        Task AddInventoryAsync(Inventory inventory);
-        Task UpdateInventoryAsync(Inventory inventory);
-        Task<Inventory> GetInventoryByIdAsync(int inventoryId);
-        Task DeleteInventoryAsync(int inventoryId);
+        Task<IEnumerable<Inventory>> GetByNameAsync(string name);
+        Task AddAsync(Inventory inventory);
+        Task UpdateAsync(Inventory inventory);
+        Task<Inventory> GetByIdAsync(int inventoryId);
+        Task DeleteAsync(int inventoryId);
     }
 }

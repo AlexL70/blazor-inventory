@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using IMS.CoreBusiness.Interfaces;
 using IMS.CoreBusiness.Validations;
 
 namespace IMS.CoreBusiness
 {
-    public class Product
+    public class Product : ICoreBusinessEntity
     {
         public int Id { get; set; }
         [Required]

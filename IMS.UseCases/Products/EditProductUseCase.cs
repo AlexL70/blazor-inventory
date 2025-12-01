@@ -11,7 +11,7 @@ namespace IMS.UseCases.Products
 
         public async Task ExecuteAsync(Product product)
         {
-            await repository.UpdateProductAsync(product);
+            await repository.UpdateAsync(product);
         }
     }
 }
