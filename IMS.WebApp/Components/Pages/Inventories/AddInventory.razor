@@ -32,16 +32,32 @@
 
 @code {
     [SupplyParameterFromForm]
-    private Inventory inventory { get; set; } = null!;
+    private InventoryViewModel inventory { get; set; } = null!;
 
     protected override void OnInitialized()
     {
-        inventory ??= new Inventory();
+        if (inventory == null)
+        {
+            var invFromDb = new Inventory();
+            inventory = new InventoryViewModel
+            {
+                Id = invFromDb.Id,
+                Name = invFromDb.Name,
+                Quantity = invFromDb.Quantity,
+                Price = invFromDb.Price
+            };
+        }
     }
 
     private async Task Save(EditContext args)
     {
-        await useCase.ExecuteAsync(inventory);
+        await useCase.ExecuteAsync(new Inventory
+        {
+            Id = inventory.Id,
+            Name = inventory.Name,
+            Quantity = inventory.Quantity,
+            Price = inventory.Price
+        });
         navManager.NavigateTo("/inventories");
     }
 }
