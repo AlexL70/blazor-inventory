@@ -1,10 +1,11 @@
 using IMS.CoreBusiness;
 using IMS.Plugins.EFCoreSqlServer.Configurations;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace IMS.Plugins.EFCoreSqlServer
 {
-    public class IMSContext(DbContextOptions<IMSContext> options) : DbContext(options)
+    public class IMSContext(DbContextOptions<IMSContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -14,7 +15,9 @@ namespace IMS.Plugins.EFCoreSqlServer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Call the base method to ensure Identity configurations are applied
             base.OnModelCreating(modelBuilder);
+            // Configure entities
             DefineConfigurations(modelBuilder);
             // Seed initial data (for development mode only)
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
