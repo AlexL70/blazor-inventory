@@ -1,5 +1,6 @@
 @page "/products/edit/{Id:int}"
 @using IMS.CoreBusiness.Exceptions
+@attribute [Authorize]
 @rendermode InteractiveServer
 @inject IGetProductByIdUseCase getByIdUseCase;
 @inject IEditProductUseCase editUseCase;

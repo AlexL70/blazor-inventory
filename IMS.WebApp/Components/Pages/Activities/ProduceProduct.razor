@@ -1,6 +1,7 @@
 @page "/produce"
 <h3>Produce Product</h3>
 <br />
+@attribute [Authorize]
 @rendermode InteractiveServer
 @inject IJSRuntime js;
 @inject IViewProductsByNameUseCase viewUseCase;

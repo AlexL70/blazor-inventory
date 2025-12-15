@@ -2,11 +2,10 @@ using IMS.CoreBusiness;
 using IMS.Plugins.EFCoreSqlServer.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 
 namespace IMS.Plugins.EFCoreSqlServer
 {
-    public class IMSContext(DbContextOptions<IMSContext> options) : IdentityDbContext<IdentityUser>(options)
+    public class IMSContext(DbContextOptions<IMSContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<Product> Products { get; set; }

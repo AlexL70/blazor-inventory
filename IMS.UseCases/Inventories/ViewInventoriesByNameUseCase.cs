@@ -5,10 +5,10 @@ using IMS.UseCases.Inventories.Interfaces;
 namespace IMS.UseCases.Inventories
 {
 
-    public class ViewInventoriesByNameUserCase : IViewInventoriesByNameUserCase
+    public class ViewInventoriesByNameUseCase : IViewInventoriesByNameUseCase
     {
         private readonly IInventoryRepository inventoryRepository;
-        public ViewInventoriesByNameUserCase(IInventoryRepository inventoryRepository)
+        public ViewInventoriesByNameUseCase(IInventoryRepository inventoryRepository)
         {
             this.inventoryRepository = inventoryRepository;
         }

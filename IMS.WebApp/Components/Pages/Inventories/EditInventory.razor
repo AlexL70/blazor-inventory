@@ -1,6 +1,6 @@
 @page "/inventories/edit/{InventoryId:int}"
 @using IMS.CoreBusiness.Exceptions
-
+@attribute [Authorize]
 @inject IGetInventoryByIdUseCase getUseCase
 @inject IEditInventoryUseCase editUseCase;
 @inject NavigationManager navManager

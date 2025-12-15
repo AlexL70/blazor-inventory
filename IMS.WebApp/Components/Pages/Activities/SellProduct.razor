@@ -1,6 +1,7 @@
 @page "/sell"
 @using System.Runtime.CompilerServices
 @inject IJSRuntime js;
+@attribute [Authorize]
 @rendermode InteractiveServer
 @inject IViewProductsByNameUseCase viewUseCase;
 @inject IGetProductByIdUseCase getByIdUseCase;

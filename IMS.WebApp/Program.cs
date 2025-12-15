@@ -45,7 +45,7 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
-builder.Services.AddIdentityCore<IdentityUser>(options =>
+builder.Services.AddIdentityCore<ApplicationUser>(options =>
     {
         options.SignIn.RequireConfirmedAccount = true;
         options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
@@ -54,7 +54,7 @@ builder.Services.AddIdentityCore<IdentityUser>(options =>
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
-builder.Services.AddSingleton<IEmailSender<IdentityUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 var app = builder.Build();
 
@@ -102,7 +102,7 @@ static void RegisterRepositories(WebApplicationBuilder builder)
 static void RegisterServices(IServiceCollection services)
 {
     // Inventory Management Services
-    services.AddTransient<IViewInventoriesByNameUserCase, ViewInventoriesByNameUserCase>();
+    services.AddTransient<IViewInventoriesByNameUseCase, ViewInventoriesByNameUseCase>();
     services.AddTransient<IAddInventoryUseCase, AddInventoryUseCase>();
     services.AddTransient<IEditInventoryUseCase, EditInventoryUseCase>();
     services.AddTransient<IGetInventoryByIdUseCase, GetInventoryByIdUseCase>();

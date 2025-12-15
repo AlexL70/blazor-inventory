@@ -1,8 +1,9 @@
 @page "/purchase"
 @using System.Threading.Tasks
+@attribute [Authorize]
 @rendermode InteractiveServer
 @inject IJSRuntime js;
-@inject IViewInventoriesByNameUserCase viewUseCase;
+@inject IViewInventoriesByNameUseCase viewUseCase;
 @inject IGetInventoryByIdUseCase GetByIdUseCase;
 @inject IPurchaseInventoryUseCase PurchaseUseCase;
 <h3>Purchase Inventory</h3>

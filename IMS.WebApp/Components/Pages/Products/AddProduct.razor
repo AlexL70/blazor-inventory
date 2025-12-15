@@ -1,5 +1,6 @@
 @page "/products/add"
 
+@attribute [Authorize]
 @rendermode InteractiveServer
 @inject IAddProductUseCase useCase;
 @inject NavigationManager navManager;
