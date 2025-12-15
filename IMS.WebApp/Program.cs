@@ -13,7 +13,6 @@ using IMS.UseCases.Reports;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using IMS.WebApp.Components.Account;
-using IMS.WebApp.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -51,7 +50,7 @@ builder.Services.AddIdentityCore<IdentityUser>(options =>
         options.SignIn.RequireConfirmedAccount = true;
         options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
     })
-    .AddEntityFrameworkStores<IMSIdentityContext>()
+    .AddEntityFrameworkStores<IMSContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
@@ -75,7 +74,7 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.MapAdditionalIdentityEndpoints();;
+app.MapAdditionalIdentityEndpoints(); ;
 
 app.Run();
 

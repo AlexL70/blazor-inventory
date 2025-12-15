@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
-using IMS.WebApp.Data;
 
 namespace IMS.WebApp.Components.Account;
 
