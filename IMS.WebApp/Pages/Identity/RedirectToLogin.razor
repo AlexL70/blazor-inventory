@@ -1,0 +1,11 @@
+@inject NavigationManager Navigation
+
+@code {
+    protected override void OnInitialized()
+    {
+        var current = Navigation.Uri;
+        var loginUrl = $"/Identity/Account/Login?returnUrl={Uri.EscapeDataString(current)}";
+        // ForceLoad to navigate to the Razor Page endpoint
+        Navigation.NavigateTo(loginUrl, forceLoad: true);
+    }
+}
