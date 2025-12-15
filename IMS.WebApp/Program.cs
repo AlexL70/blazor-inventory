@@ -12,6 +12,10 @@ using IMS.UseCases.Reports.Interfaces;
 using IMS.UseCases.Reports;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+using IMS.WebApp.Components.Account;
+using IMS.WebApp.Data;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +32,30 @@ builder.Services.AddRazorComponents()
 
 RegisterRepositories(builder);
 RegisterServices(builder.Services);
+
+builder.Services.AddCascadingAuthenticationState();
+
+builder.Services.AddScoped<IdentityRedirectManager>();
+
+builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultScheme = IdentityConstants.ApplicationScheme;
+        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+    })
+    .AddIdentityCookies();
+
+builder.Services.AddIdentityCore<IdentityUser>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = true;
+        options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
+    })
+    .AddEntityFrameworkStores<IMSIdentityContext>()
+    .AddSignInManager()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddSingleton<IEmailSender<IdentityUser>, IdentityNoOpEmailSender>();
 
 var app = builder.Build();
 
@@ -46,6 +74,8 @@ app.UseAntiforgery();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.MapAdditionalIdentityEndpoints();;
 
 app.Run();
 
