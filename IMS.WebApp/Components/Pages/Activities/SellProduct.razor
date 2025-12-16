@@ -1,8 +1,9 @@
 @page "/sell"
 @using System.Runtime.CompilerServices
-@inject IJSRuntime js;
 @attribute [Authorize]
 @rendermode InteractiveServer
+@inject IJSRuntime js;
+@inject AuthenticationStateProvider authStateProvider;
 @inject IViewProductsByNameUseCase viewUseCase;
 @inject IGetProductByIdUseCase getByIdUseCase;
 @inject ISellProductUseCase sellUseCase;
@@ -39,6 +40,8 @@
 
 @code {
     private SellViewModel viewModel = new SellViewModel();
+    [PersistentState]
+    public string? userName { get; private set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -52,9 +55,8 @@
 
     private async Task Sell(EditContext args)
     {
-        // !!! TODO: Replace "Alex" with logged in user
         await sellUseCase.ExecuteAsync(viewModel.SalesOrderNumber, viewModel.Product!, viewModel.QuantityToSell,
-        viewModel.UnitPrice, "Alex");
+        viewModel.UnitPrice, userName!);
         viewModel = new SellViewModel();
     }
 

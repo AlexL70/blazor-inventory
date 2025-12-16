@@ -3,6 +3,7 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 @inject IJSRuntime js;
+@inject AuthenticationStateProvider authStateProvider;
 @inject IViewInventoriesByNameUseCase viewUseCase;
 @inject IGetInventoryByIdUseCase GetByIdUseCase;
 @inject IPurchaseInventoryUseCase PurchaseUseCase;
@@ -43,6 +44,14 @@
 @code {
     private PurchaseViewModel viewModel = new PurchaseViewModel();
     private Inventory? selectedInventory;
+    [PersistentState]
+    public string? userName { get; private set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        userName ??= (await authStateProvider.GetAuthenticationStateAsync()).User.Identity?.Name;
+        await base.OnInitializedAsync();
+    }
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -70,8 +79,7 @@
     }
     private async Task Purchase()
     {
-        // !!! TODO: Replace "Alex" with logged in user
-        await PurchaseUseCase.ExecuteAsync(viewModel.PONumber, selectedInventory!, viewModel.QuantityToPurchase, "Alex");
+        await PurchaseUseCase.ExecuteAsync(viewModel.PONumber, selectedInventory!, viewModel.QuantityToPurchase, userName!);
         viewModel = new PurchaseViewModel();
         selectedInventory = null;
     }

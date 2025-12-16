@@ -4,6 +4,7 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 @inject IJSRuntime js;
+@inject AuthenticationStateProvider authStateProvider;
 @inject IViewProductsByNameUseCase viewUseCase;
 @inject IGetProductByIdUseCase getByIdUseCase;
 @inject IProduceProductUseCase produceUseCase;
@@ -34,6 +35,14 @@
 @code {
     private ProduceViewModel viewModel = new ProduceViewModel();
     private Product? selectedProduct = null;
+    [PersistentState]
+    public string? userName { get; private set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        userName ??= (await authStateProvider.GetAuthenticationStateAsync()).User.Identity?.Name;
+        await base.OnInitializedAsync();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -50,8 +59,7 @@
 
     private async Task Produce()
     {
-        // !!! TODO: Replace "Alex" with logged in user
-        await produceUseCase.ExecuteAsync(viewModel.ProductionNumber, selectedProduct!, viewModel.QuantityToProduce, "Alex");
+        await produceUseCase.ExecuteAsync(viewModel.ProductionNumber, selectedProduct!, viewModel.QuantityToProduce, userName!);
         viewModel = new ProduceViewModel();
         selectedProduct = null;
     }

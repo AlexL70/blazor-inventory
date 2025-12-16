@@ -52,6 +52,7 @@ namespace IMS.Plugins.EFCoreSqlServer
             });
             // increase product quantity
             prod.Quantity += quantity;
+            context.SaveChanges();
             await prodRepo.UpdateAsync(prod);
 
         }
