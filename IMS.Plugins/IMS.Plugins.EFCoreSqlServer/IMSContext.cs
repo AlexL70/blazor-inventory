@@ -101,6 +101,8 @@ namespace IMS.Plugins.EFCoreSqlServer
                     NormalizedUserName = $"{user.UserName.ToUpper()}{emailSuffix}",
                     Email = $"{user.UserName.ToLower()}{emailSuffix}",
                     NormalizedEmail = $"{user.UserName.ToUpper()}{emailSuffix}",
+                    FirstName = user.UserName,
+                    LastName = user.UserName,
                     PasswordHash = user.PasswordHash,
                     SecurityStamp = user.SecurityStamp,
                     EmailConfirmed = true,
