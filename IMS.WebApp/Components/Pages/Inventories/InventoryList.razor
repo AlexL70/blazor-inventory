@@ -1,5 +1,5 @@
 @page "/inventories"
-@attribute [Authorize]
+@attribute [Authorize(policy: Policies.Inventory)]
 @inject NavigationManager NavigationManager
 
 <h3>Inventory List</h3>

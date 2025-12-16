@@ -1,6 +1,6 @@
 @page "/products/add"
 
-@attribute [Authorize]
+@attribute [Authorize(policy: Policies.Inventory)]
 @rendermode InteractiveServer
 @inject IAddProductUseCase useCase;
 @inject NavigationManager navManager;

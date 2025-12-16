@@ -1,6 +1,6 @@
 @page "/purchase"
 @using System.Threading.Tasks
-@attribute [Authorize]
+@attribute [Authorize(policy: Policies.Purchasers)]
 @rendermode InteractiveServer
 @inject IJSRuntime js;
 @inject AuthenticationStateProvider authStateProvider;

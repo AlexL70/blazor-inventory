@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using IMS.WebApp.Components.Account;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.Options;
+using IMS.CoreBusiness.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +40,14 @@ builder.Services.AddScoped<IdentityRedirectManager>();
 
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Policies.Admin, policy => policy.RequireClaim(ImsClaimTypes.Department, Departments.Administration));
+    options.AddPolicy(Policies.Inventory, policy => policy.RequireClaim(ImsClaimTypes.Department, Departments.InventoryManagement));
+    options.AddPolicy(Policies.Sales, policy => policy.RequireClaim(ImsClaimTypes.Department, Departments.Sales));
+    options.AddPolicy(Policies.Purchasers, policy => policy.RequireClaim(ImsClaimTypes.Department, Departments.Purchasing));
+    options.AddPolicy(Policies.Productions, policy => policy.RequireClaim(ImsClaimTypes.Department, Departments.ProductionManagement));
+});
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = IdentityConstants.ApplicationScheme;

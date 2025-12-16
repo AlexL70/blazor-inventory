@@ -1,5 +1,5 @@
 @page "/products"
-@attribute [Authorize]
+@attribute [Authorize(policy: Policies.Inventory)]
 @inject NavigationManager NavigationManager
 
 <h3>Product List</h3>

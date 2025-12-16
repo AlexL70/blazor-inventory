@@ -1,6 +1,6 @@
 @page "/sell"
 @using System.Runtime.CompilerServices
-@attribute [Authorize]
+@attribute [Authorize(policy: Policies.Sales)]
 @rendermode InteractiveServer
 @inject IJSRuntime js;
 @inject AuthenticationStateProvider authStateProvider;

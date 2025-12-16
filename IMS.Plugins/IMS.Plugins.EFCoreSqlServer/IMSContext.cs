@@ -1,6 +1,8 @@
 using IMS.CoreBusiness;
+using IMS.CoreBusiness.Constants;
 using IMS.Plugins.EFCoreSqlServer.Configurations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace IMS.Plugins.EFCoreSqlServer
@@ -19,7 +21,105 @@ namespace IMS.Plugins.EFCoreSqlServer
             DefineConfigurations(modelBuilder);
             // Seed initial data (for development mode only)
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            {
+                SeedUsers(modelBuilder);
                 SeedData(modelBuilder);
+            }
+        }
+
+        internal class UserData
+        {
+            public string UserName { get; set; } = string.Empty;
+            public string UserId { get; set; } = string.Empty;
+            public int ClaimId { get; set; } = 0;
+            public string SecurityStamp { get; set; } = string.Empty;
+            public string PasswordHash { get; set; } = string.Empty;
+            public string ClaimValue { get; set; } = string.Empty;
+            public string ConcurrencyStamp { get; set; } = string.Empty;
+        }
+
+        private void SeedUsers(ModelBuilder modelBuilder)
+        {
+            List<UserData> users = [
+                new UserData {
+                    UserName = Policies.Admin,
+                    UserId = "614dcc9d-6c37-4c4d-a882-c460b8a98fbe",
+                    ClaimId = 1,
+                    SecurityStamp = "f39e617d-0482-4b8a-af2e-ab4e23c8b195",
+                    PasswordHash = "AQAAAAIAAYagAAAAECvM5DqYyqm7Yf+NdNzjKZb+1Jy7poambcDNEhj/391IQpLHvnulGRZqCay9hkhtoQ==",
+                    ClaimValue = Departments.Administration,
+                    ConcurrencyStamp = "5cd3d9e1-44a5-461d-9495-d53286627d4e"
+                },
+                new UserData {
+                    UserName = Policies.Inventory,
+                    UserId = "d3b3f4e1-8f4e-4c2a-9f7a-2e5d6c3b4a1e",
+                    ClaimId = 2,
+                    SecurityStamp = "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+                    PasswordHash = "AQAAAAIAAYagAAAAED/hj1mD5n14oIrf2ZrjH3ZfCuqCAMbQ4DnA7QhOAEOI1ycEOhkbDbgpOQ4nRoyt+g==",
+                    ClaimValue = Departments.InventoryManagement,
+                    ConcurrencyStamp = "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d"
+                },
+                new UserData {
+                    UserName = Policies.Sales,
+                    UserId = "e2a1f5b6-7c8d-4e9f-9a0b-1c2d3e4f5a6b",
+                    ClaimId = 3,
+                    SecurityStamp = "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
+                    PasswordHash = "AQAAAAIAAYagAAAAEOhX5gDo0z4ReTvAnW5N8FQ/xSICxrZMBg698iIvE+66noY/KAU/X6/X3O5EOOD5Og==",
+                    ClaimValue = Departments.Sales,
+                    ConcurrencyStamp = "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e"
+                },
+                new UserData {
+                    UserName = Policies.Purchasers,
+                    UserId = "f4c5d6e7-8f9a-4b0c-9d1e-2f3a4b5c6d7e",
+                    ClaimId = 4,
+                    SecurityStamp = "c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f",
+                    PasswordHash = "AQAAAAIAAYagAAAAEGK/TaMWksteFtTCkLBwodJsd6MzhaOJr+QBO50XrUx3h7GzKU8sEStg02nh3ApG0w==",
+                    ClaimValue = Departments.Purchasing,
+                    ConcurrencyStamp = "c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f"
+                },
+                new UserData {
+                    UserName = Policies.Productions,
+                    UserId = "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+                    ClaimId = 5,
+                    SecurityStamp = "d4e5f6a7-b8c9-0d1e-2f3a-4b5c6d7e8f9a",
+                    PasswordHash = "AQAAAAIAAYagAAAAEIbzA6udlFefLboNrU7zEOPp8z/kTrHUdJOoYvznIuLOwhQUL8HNn3BnIvbPnBemgw==",
+                    ClaimValue = Departments.ProductionManagement,
+                    ConcurrencyStamp = "d4e5f6a7-b8c9-0d1e-2f3a-4b5c6d7e8f9a"
+                }
+            ];
+
+            const string emailSuffix = "@imsmail.com";
+            //const string defaultPassword = "P@ssw0rd!";
+            //var hasher = new PasswordHasher<ApplicationUser>();
+            foreach (var user in users)
+            {
+                // Seed users
+                var userEntity = new ApplicationUser
+                {
+                    Id = user.UserId,
+                    UserName = $"{user.UserName.ToLower()}{emailSuffix}",
+                    NormalizedUserName = $"{user.UserName.ToUpper()}{emailSuffix}",
+                    Email = $"{user.UserName.ToLower()}{emailSuffix}",
+                    NormalizedEmail = $"{user.UserName.ToUpper()}{emailSuffix}",
+                    PasswordHash = user.PasswordHash,
+                    SecurityStamp = user.SecurityStamp,
+                    EmailConfirmed = true,
+                    ConcurrencyStamp = user.ConcurrencyStamp
+                };
+                // Console.WriteLine($"Seeding user: {userEntity.UserName} with hash: {hasher.HashPassword(userEntity, defaultPassword)}");
+                modelBuilder.Entity<ApplicationUser>().HasData(userEntity);
+
+                // Seed claims for user
+                modelBuilder.Entity<IdentityUserClaim<string>>().HasData(
+                            new IdentityUserClaim<string>
+                            {
+                                Id = user.ClaimId,
+                                UserId = user.UserId,
+                                ClaimType = ImsClaimTypes.Department,
+                                ClaimValue = user.ClaimValue
+                            }
+                        );
+            }
         }
 
         private void SeedData(ModelBuilder modelBuilder)

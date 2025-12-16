@@ -1,5 +1,5 @@
 @page "/inventories/add"
-@attribute [Authorize]
+@attribute [Authorize(policy: Policies.Inventory)]
 @inject IAddInventoryUseCase useCase;
 @inject NavigationManager navManager;
 

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IMS.Plugins.EFCoreSqlServer.Migrations
 {
     [DbContext(typeof(IMSContext))]
-    [Migration("20251215203201_InitIdentity")]
+    [Migration("20251216135622_InitIdentity")]
     partial class InitIdentity
     {
         /// <inheritdoc />
@@ -540,6 +540,98 @@ namespace IMS.Plugins.EFCoreSqlServer.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "614dcc9d-6c37-4c4d-a882-c460b8a98fbe",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "5cd3d9e1-44a5-461d-9495-d53286627d4e",
+                            Email = "admin@imsmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "",
+                            LastName = "",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@imsmail.com",
+                            NormalizedUserName = "ADMIN@imsmail.com",
+                            PasswordHash = "AQAAAAIAAYagAAAAECvM5DqYyqm7Yf+NdNzjKZb+1Jy7poambcDNEhj/391IQpLHvnulGRZqCay9hkhtoQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "f39e617d-0482-4b8a-af2e-ab4e23c8b195",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@imsmail.com"
+                        },
+                        new
+                        {
+                            Id = "d3b3f4e1-8f4e-4c2a-9f7a-2e5d6c3b4a1e",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+                            Email = "inventory@imsmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "",
+                            LastName = "",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "INVENTORY@imsmail.com",
+                            NormalizedUserName = "INVENTORY@imsmail.com",
+                            PasswordHash = "AQAAAAIAAYagAAAAED/hj1mD5n14oIrf2ZrjH3ZfCuqCAMbQ4DnA7QhOAEOI1ycEOhkbDbgpOQ4nRoyt+g==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+                            TwoFactorEnabled = false,
+                            UserName = "inventory@imsmail.com"
+                        },
+                        new
+                        {
+                            Id = "e2a1f5b6-7c8d-4e9f-9a0b-1c2d3e4f5a6b",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
+                            Email = "sales@imsmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "",
+                            LastName = "",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SALES@imsmail.com",
+                            NormalizedUserName = "SALES@imsmail.com",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOhX5gDo0z4ReTvAnW5N8FQ/xSICxrZMBg698iIvE+66noY/KAU/X6/X3O5EOOD5Og==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
+                            TwoFactorEnabled = false,
+                            UserName = "sales@imsmail.com"
+                        },
+                        new
+                        {
+                            Id = "f4c5d6e7-8f9a-4b0c-9d1e-2f3a4b5c6d7e",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f",
+                            Email = "purchasers@imsmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "",
+                            LastName = "",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "PURCHASERS@imsmail.com",
+                            NormalizedUserName = "PURCHASERS@imsmail.com",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGK/TaMWksteFtTCkLBwodJsd6MzhaOJr+QBO50XrUx3h7GzKU8sEStg02nh3ApG0w==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f",
+                            TwoFactorEnabled = false,
+                            UserName = "purchasers@imsmail.com"
+                        },
+                        new
+                        {
+                            Id = "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "d4e5f6a7-b8c9-0d1e-2f3a-4b5c6d7e8f9a",
+                            Email = "productions@imsmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "",
+                            LastName = "",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "PRODUCTIONS@imsmail.com",
+                            NormalizedUserName = "PRODUCTIONS@imsmail.com",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIbzA6udlFefLboNrU7zEOPp8z/kTrHUdJOoYvznIuLOwhQUL8HNn3BnIvbPnBemgw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "d4e5f6a7-b8c9-0d1e-2f3a-4b5c6d7e8f9a",
+                            TwoFactorEnabled = false,
+                            UserName = "productions@imsmail.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -617,6 +709,43 @@ namespace IMS.Plugins.EFCoreSqlServer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ClaimType = "Department",
+                            ClaimValue = "Administration",
+                            UserId = "614dcc9d-6c37-4c4d-a882-c460b8a98fbe"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ClaimType = "Department",
+                            ClaimValue = "InventoryManagement",
+                            UserId = "d3b3f4e1-8f4e-4c2a-9f7a-2e5d6c3b4a1e"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ClaimType = "Department",
+                            ClaimValue = "Sales",
+                            UserId = "e2a1f5b6-7c8d-4e9f-9a0b-1c2d3e4f5a6b"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ClaimType = "Department",
+                            ClaimValue = "Purchasing",
+                            UserId = "f4c5d6e7-8f9a-4b0c-9d1e-2f3a4b5c6d7e"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ClaimType = "Department",
+                            ClaimValue = "ProductionManagement",
+                            UserId = "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
