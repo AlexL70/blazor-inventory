@@ -10,60 +10,60 @@
             aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="@collapseClass" id="navbarSupportedContent">
+        <div class="@collapseMainClass" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All" @onclick="CollapseDropdowns">
                         <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
                     </NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink class="nav-link" href="inventories">
+                    <NavLink class="nav-link" href="inventories" @onclick="CollapseDropdowns">
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Inventories
                     </NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink class="nav-link" href="products">
+                    <NavLink class="nav-link" href="products" @onclick="CollapseDropdowns">
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Products
                     </NavLink>
                 </li>
-                <li class="nav-item dropdown">
+                <li @onclick="ToggleActivities" class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         Activities
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="@collapseActivitiesClass">
                         <li>
-                            <NavLink class="nav-link" href="purchase">
+                            <NavLink class="dropdown-item" href="purchase">
                                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Purchase
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink class="nav-link" href="produce">
+                            <NavLink class="dropdown-item" href="produce">
                                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Produce
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink class="nav-link" href="sell">
+                            <NavLink class="dropdown-item" href="sell">
                                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Sell
                             </NavLink>
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown">
+                <li @onclick="ToggleReports" class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         Reports
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="@collapseReportsClass">
                         <li>
-                            <NavLink class="nav-link" href="reports/inventory-transactions">
+                            <NavLink class="dropdown-item" href="reports/inventory-transactions">
                                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Inventory
                                 Transactions
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink class="nav-link" href="reports/product-transactions">
+                            <NavLink class="dropdown-item" href="reports/product-transactions">
                                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Product Transactions
                             </NavLink>
                         </li>
@@ -110,7 +110,13 @@
 @code {
     private string? currentUrl;
     private bool isMenuCollapsed = true;
-    private string collapseClass => isMenuCollapsed ? "collapse navbar-collapse" : "navbar-collapse";
+    private string collapseMainClass => isMenuCollapsed ? "collapse navbar-collapse" : "navbar-collapse";
+
+    private bool isActivitiesCollapsed = true;
+    private string collapseActivitiesClass => isActivitiesCollapsed ? "dropdown-menu" : "dropdown-menu show";
+    private bool isReportsCollapsed = true;
+    private string collapseReportsClass => isReportsCollapsed ? "dropdown-menu" : "dropdown-menu show";
+
     protected override void OnInitialized()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
@@ -130,5 +136,21 @@
     private void ToggleMenu(MouseEventArgs args)
     {
         isMenuCollapsed = !isMenuCollapsed;
+    }
+    private void ToggleActivities(MouseEventArgs args)
+    {
+        isActivitiesCollapsed = !isActivitiesCollapsed;
+        isReportsCollapsed = true;
+    }
+    private void ToggleReports(MouseEventArgs args)
+    {
+        isReportsCollapsed = !isReportsCollapsed;
+        isActivitiesCollapsed = true;
+    }
+
+    private void CollapseDropdowns()
+    {
+        isActivitiesCollapsed = true;
+        isReportsCollapsed = true;
     }
 }
