@@ -1,0 +1,87 @@
+@page "/Account/UserManagement/{UserId}"
+@using System.Security.Claims
+@using System.ComponentModel.DataAnnotations
+
+@attribute [Authorize(Policy = Policies.Admin)]
+@inject UserManager<ApplicationUser> userManager;
+@inject NavigationManager navManager
+
+<h3>Manage User</h3>
+
+@if (viewModel is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <EditForm FormName="manageUserForm" Model="viewModel" OnValidSubmit="SaveUserAsync">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group mb-3">
+            <label for="email" class="form-label">Email</label>
+            <InputText id="email" class="form-control" @bind-Value="viewModel.Email" aria-readonly="true" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="department" class="form-label">Department</label>
+            <InputSelect id="department" class="form-control" @bind-Value="viewModel.Department">
+                <option value="">-- Select Department --</option>
+                @foreach (var dept in Departments.All)
+                {
+                    <option value="@dept.ToString()">@dept.ToString()</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => viewModel.Department)" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a class="btn btn-secondary" href="/Account/UserManagement/List">Cancel</a>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public string? UserId { get; set; } = null;
+    private ApplicationUser? user;
+    private IList<Claim>? userClaims;
+    private Claim? departmentClaim;
+    private bool userHadDepartment => departmentClaim is not null;
+    [SupplyParameterFromForm]
+    private ManageUserViewModel? viewModel { get; set; } = null;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        user = userManager.Users.First(u => u.Id == UserId);
+        userClaims = (await userManager.GetClaimsAsync(user)).ToList();
+        departmentClaim = userClaims.FirstOrDefault(c => c.Type == ImsClaimTypes.Department);
+        viewModel ??= new ManageUserViewModel
+        {
+            Email = user.Email!,
+            Department = departmentClaim?.Value ?? string.Empty
+        };
+        await base.OnParametersSetAsync();
+    }
+
+    internal class ManageUserViewModel
+    {
+        public string Email { get; set; } = string.Empty;
+        [Required]
+        public string Department { get; set; } = string.Empty;
+    }
+    private async Task SaveUserAsync()
+    {
+        if (userHadDepartment)
+        {
+            await userManager.ReplaceClaimAsync(user!, departmentClaim!, new Claim(ImsClaimTypes.Department,
+            viewModel!.Department));
+        }
+        else
+        {
+            await userManager.AddClaimAsync(user!, new Claim(ImsClaimTypes.Department,
+            viewModel!.Department));
+        }
+        await userManager.UpdateAsync(user!);
+        navManager.NavigateTo("/Account/UserManagement/List");
+    }
+}

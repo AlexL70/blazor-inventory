@@ -7,5 +7,13 @@ namespace IMS.CoreBusiness.Constants
         public const string Sales = "Sales";
         public const string Purchasing = "Purchasing";
         public const string ProductionManagement = "ProductionManagement";
+        public static readonly string[] All =
+        [
+            Administration,
+            InventoryManagement,
+            Sales,
+            Purchasing,
+            ProductionManagement
+        ];
     }
 }

@@ -1,6 +1,4 @@
 @page "/Account/UserManagement/List"
-@using Microsoft.AspNetCore.Identity
-@using Microsoft.EntityFrameworkCore
 @layout IMS.WebApp.Components.Layout.MainLayout
 
 @attribute [Authorize(Policy = Policies.Admin)]
@@ -36,7 +34,7 @@ else
                     <td>@user.LastName</td>
                     <td>@user.Email</td>
                     <td>
-                        <a class="btn btn-link" href="@($"/account/manageuser/{user.Id}")">Edit</a>
+                        <a class="btn btn-link" href="@($"/Account/UserManagement/{user.Id}")">Edit</a>
                     </td>
                 </tr>
             }
